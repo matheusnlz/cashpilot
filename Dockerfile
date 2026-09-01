@@ -17,7 +17,8 @@ RUN apt-get update \
         libfreetype6-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring curl gd \
-    && a2enmod rewrite headers expires \
+    && a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork rewrite headers expires \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
