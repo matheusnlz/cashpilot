@@ -1,0 +1,19 @@
+# Credenciais locais / segredos
+includes/openai_config.php
+includes/groq_config.php
+includes/email_config.php
+includes/oauth_config.php
+.env
+.env.*
+!.env.example
+
+# Arquivos gerados/localmente
+*.log
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# Uploads persistidos fora do banco, quando existentes
+uploads/avatars/*
+!uploads/avatars/.gitkeep

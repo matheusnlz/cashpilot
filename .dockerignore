@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+__pycache__
+*.pyc
+*.log
+*.bak
+*.old
+uploads/avatars/*
+!uploads/avatars/.gitkeep

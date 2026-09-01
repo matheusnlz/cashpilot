@@ -1,0 +1,5 @@
+# CashPilot 14.9 - dependências Python
+mysql-connector-python>=9.0
+python-dateutil>=2.9
+pypdf>=6.0
+pdfplumber>=0.11

@@ -1,0 +1,1638 @@
+/* ============================================================
+   CashPilot 14.8.2 — Responsividade multidispositivo
+   Mantém a identidade desktop e reorganiza a experiência em
+   tablets e smartphones sem alterar regras de negócio.
+   ============================================================ */
+
+.cp-mobile-navigation,
+.cp-mobile-subnav-layer,
+.cp-mobile-row-menu {
+    display: none;
+}
+
+/* Tablets: preserva a lógica da sidebar, mas usa uma versão compacta. */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .mobile-topbar,
+    .sidebar-overlay,
+    .sidebar-mobile-close {
+        display: none !important;
+    }
+
+    .layout {
+        display: flex !important;
+        min-height: 100vh;
+    }
+
+    .sidebar,
+    .sidebar.recolhida {
+        position: sticky !important;
+        inset: 0 auto auto 0 !important;
+        z-index: 30 !important;
+        width: 82px !important;
+        height: 100vh !important;
+        transform: none !important;
+        box-shadow: none !important;
+        padding-inline: 0 !important;
+    }
+
+    .sidebar .brand-logo-full,
+    .sidebar .menu-label,
+    .sidebar .menu-grupo-titulo,
+    .sidebar .sidebar-toggle,
+    .sidebar .sidebar-user-name {
+        display: none !important;
+    }
+
+    .sidebar .brand-logo-mini {
+        display: block !important;
+        margin-inline: auto;
+    }
+
+    .sidebar .sidebar-topo {
+        padding-inline: 12px !important;
+        justify-content: center !important;
+    }
+
+    .sidebar .menu-item,
+    .sidebar.recolhida .menu-item {
+        width: 52px !important;
+        min-height: 46px !important;
+        margin: 3px auto !important;
+        padding: 8px !important;
+        justify-content: center !important;
+    }
+
+    .sidebar .menu-icone {
+        width: auto !important;
+    }
+
+    .conteudo,
+    .sidebar.recolhida ~ .conteudo {
+        width: calc(100% - 82px) !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .conteudo-inner {
+        width: min(100%, 1180px);
+        margin-inline: auto;
+        padding: 28px 26px 44px !important;
+    }
+
+    .dashboard-grid-main,
+    .dashboard-grid-secondary,
+    .cp14-vision-grid,
+    .reports-grid,
+    .relatorios-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .table-row {
+        grid-template-columns: minmax(180px, 1.6fr) minmax(105px, 1fr) minmax(100px, .9fr) 90px 110px 90px;
+        gap: 8px;
+        padding-inline: 14px;
+    }
+
+    .cp-drawer {
+        width: min(520px, 72vw) !important;
+    }
+}
+
+/* Smartphones: experiência própria, mantendo o mesmo CashPilot. */
+@media (max-width: 767px) {
+    :root {
+        --cp-mobile-nav-height: 68px;
+        --cp-mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        padding-bottom: calc(var(--cp-mobile-nav-height) + var(--cp-mobile-safe-bottom));
+    }
+
+    body.cp-mobile-nav-open {
+        overflow: hidden;
+    }
+
+    .mobile-topbar {
+        height: 54px !important;
+        grid-template-columns: 40px 1fr 38px !important;
+        padding: 0 14px !important;
+    }
+
+    .mobile-menu-btn {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .mobile-brand img {
+        height: 23px !important;
+    }
+
+    .mobile-avatar {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50% !important;
+    }
+
+    .sidebar,
+    .sidebar-overlay {
+        display: none !important;
+    }
+
+    .conteudo {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .conteudo-inner {
+        width: 100%;
+        max-width: 100%;
+        padding: 18px 14px 28px !important;
+    }
+
+    .page-head,
+    .topo-pagina {
+        gap: 12px !important;
+        margin-bottom: 18px !important;
+    }
+
+    .page-head h1,
+    .topo-pagina h1 {
+        font-size: clamp(25px, 7vw, 30px) !important;
+        line-height: 1.08 !important;
+    }
+
+    .page-head p,
+    .topo-pagina p {
+        max-width: 100%;
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+    }
+
+    .page-head > .btn,
+    .topo-pagina > .btn,
+    .page-head > div + .btn {
+        width: auto;
+        max-width: 100%;
+    }
+
+    .cp14-head-actions {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px !important;
+    }
+
+    .cp14-head-actions .btn {
+        min-width: 0;
+        white-space: normal;
+    }
+
+    .surface-card,
+    .cartao,
+    .data-panel,
+    .calendar-panel {
+        border-radius: 14px !important;
+    }
+
+    .surface-card,
+    .cartao {
+        padding: 15px !important;
+    }
+
+    .section-title {
+        gap: 10px !important;
+        margin-bottom: 13px !important;
+    }
+
+    .section-title h2,
+    .data-panel-head h2 {
+        font-size: 16px !important;
+    }
+
+    /* Resumos compactos: dois cartões por linha quando houver espaço. */
+    .summary-strip {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px !important;
+        overflow: visible !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .summary-strip > div {
+        min-width: 0 !important;
+        padding: 13px !important;
+        border: 1px solid var(--cp-border);
+        border-radius: 12px;
+        background: var(--cp-surface, #fff) !important;
+    }
+
+    .summary-strip > div:first-child:nth-last-child(3) {
+        grid-column: 1 / -1;
+    }
+
+    .summary-strip strong {
+        font-size: 15px !important;
+        overflow-wrap: anywhere;
+    }
+
+    /* Filtros ocupam a largura do aparelho e continuam completos. */
+    .filter-bar {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    .filter-search,
+    .filter-bar input,
+    .filter-bar select,
+    .filter-bar .btn {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .filter-clear {
+        justify-self: start;
+    }
+
+    /* Listagens financeiras viram cartões, não tabelas espremidas. */
+    .responsive-list {
+        display: grid;
+        gap: 9px;
+        padding: 10px;
+        background: transparent;
+    }
+
+    .responsive-list .table-head {
+        display: none !important;
+    }
+
+    .responsive-list .table-row:not(.table-head) {
+        position: relative;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        grid-auto-rows: auto;
+        gap: 5px 10px !important;
+        min-height: 0 !important;
+        padding: 13px 42px 13px 13px !important;
+        border: 1px solid var(--cp-border) !important;
+        border-radius: 12px;
+        background: var(--cp-surface, #fff);
+    }
+
+    .responsive-list .table-row:not(.table-head) > div {
+        min-width: 0;
+    }
+
+    .responsive-list .table-row:not(.table-head) > .cell-main {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: center;
+    }
+
+    .responsive-list .table-row:not(.table-head) > div:nth-child(2) {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+    }
+
+    .responsive-list .table-row:not(.table-head) > div:nth-child(3) {
+        grid-column: 1 !important;
+        grid-row: 3 !important;
+        font-size: 10px !important;
+        color: var(--cp-muted);
+    }
+
+    .responsive-list .table-row:not(.table-head) > div:nth-child(4) {
+        grid-column: 1 !important;
+        grid-row: 4 !important;
+        font-size: 10px !important;
+        color: var(--cp-muted);
+    }
+
+    .responsive-list .table-row:not(.table-head) > div:nth-child(5) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        align-self: center;
+        text-align: right !important;
+        font-size: 12px;
+    }
+
+    .responsive-list .row-actions {
+        position: absolute;
+        top: 8px;
+        right: 7px;
+        display: block !important;
+        z-index: 6;
+    }
+
+    .responsive-list .row-actions > :not(.cp-mobile-row-menu) {
+        display: none !important;
+    }
+
+    .responsive-list .row-actions.cp-mobile-actions-open {
+        top: 7px;
+        right: 7px;
+        min-width: 132px;
+        padding: 38px 8px 8px;
+        border: 1px solid var(--cp-border);
+        border-radius: 12px;
+        background: var(--cp-surface, #fff);
+        box-shadow: 0 14px 35px rgba(20, 30, 25, .16);
+    }
+
+    .responsive-list .row-actions.cp-mobile-actions-open > :not(.cp-mobile-row-menu) {
+        display: flex !important;
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .responsive-list .row-actions.cp-mobile-actions-open a,
+    .responsive-list .row-actions.cp-mobile-actions-open button:not(.cp-mobile-row-menu) {
+        width: 100%;
+        min-height: 34px;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 7px 9px;
+        border-radius: 8px;
+    }
+
+    .cp-mobile-row-menu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: grid !important;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border: 0;
+        border-radius: 9px;
+        background: transparent;
+        color: var(--cp-muted);
+        font-size: 20px !important;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .cp-mobile-row-menu:active,
+    .cp-mobile-row-menu[aria-expanded="true"] {
+        background: var(--cp-primary-soft);
+        color: var(--cp-primary);
+    }
+
+    /* Dashboard: resultado em destaque e métricas em dupla. */
+    .dashboard-primary {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 9px !important;
+    }
+
+    .dashboard-primary .hero-balance {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+    }
+
+    .dashboard-primary .metric-clean {
+        min-width: 0;
+        padding: 14px !important;
+    }
+
+    .dashboard-primary .metric-clean strong {
+        font-size: clamp(16px, 4.7vw, 21px) !important;
+        overflow-wrap: anywhere;
+    }
+
+    .dashboard-primary .metric-clean small {
+        font-size: 9px !important;
+    }
+
+    .dashboard-grid-main,
+    .dashboard-grid-secondary,
+    .business-kpis,
+    .cp14-vision-grid,
+    .reports-grid,
+    .relatorios-grid,
+    .importacao-resumo-grid,
+    .produto-kpis,
+    .venda-resumo-v9,
+    .radar-resumo-v9 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .container-grafico,
+    .chart-wrap,
+    .chart-container {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 240px;
+    }
+
+    canvas {
+        max-width: 100% !important;
+    }
+
+    .periodos-grafico {
+        max-width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .periodos-grafico::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Formulários e drawers viram superfícies confortáveis para toque. */
+    input,
+    select,
+    textarea,
+    button,
+    .btn {
+        max-width: 100%;
+    }
+
+    .form-grid,
+    .inline-fields,
+    .form-linha,
+    .grid-form {
+        grid-template-columns: 1fr !important;
+    }
+
+    .cp-drawer {
+        inset: auto 0 0 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: min(88dvh, 760px) !important;
+        border-radius: 20px 20px 0 0 !important;
+        transform: translateY(105%) !important;
+    }
+
+    .cp-drawer.aberto {
+        transform: translateY(0) !important;
+    }
+
+    .drawer-body {
+        overflow-y: auto;
+        padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .cp-confirm-modal {
+        width: calc(100vw - 28px) !important;
+        max-width: 430px !important;
+        margin: auto 14px 18px !important;
+        border-radius: 18px !important;
+    }
+
+    /* Tabelas que não têm versão em cards continuam utilizáveis. */
+    table {
+        font-size: 11px;
+    }
+
+    .import-review-table-wrap,
+    .data-panel:has(> table),
+    .surface-card:has(> table) {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Copiloto respeita a navegação inferior. */
+    .copiloto-widget {
+        inset: 54px 0 calc(var(--cp-mobile-nav-height) + var(--cp-mobile-safe-bottom)) 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .copiloto-botao {
+        right: 14px !important;
+        bottom: calc(var(--cp-mobile-nav-height) + 12px + var(--cp-mobile-safe-bottom)) !important;
+    }
+
+    .copiloto-full {
+        height: calc(100dvh - 54px - var(--cp-mobile-nav-height) - var(--cp-mobile-safe-bottom) - 34px) !important;
+        min-height: 480px !important;
+    }
+
+    /* Navegação inferior por áreas da sidebar atual. */
+    .cp-mobile-navigation {
+        position: fixed;
+        z-index: 240;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: block;
+        padding-bottom: var(--cp-mobile-safe-bottom);
+        border-top: 1px solid var(--cp-border);
+        background: color-mix(in srgb, var(--cp-surface, #fff) 94%, transparent);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .cp-mobile-groups {
+        height: var(--cp-mobile-nav-height);
+        display: flex;
+        align-items: stretch;
+        gap: 3px;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        padding: 7px 9px 6px;
+    }
+
+    .cp-mobile-groups::-webkit-scrollbar {
+        display: none;
+    }
+
+    .cp-mobile-group {
+        position: relative;
+        flex: 0 0 auto;
+        min-width: 92px;
+        max-width: 132px;
+        scroll-snap-align: center;
+        border: 0;
+        border-radius: 11px;
+        background: transparent;
+        color: var(--cp-muted);
+        padding: 8px 11px 10px;
+        font: inherit;
+        font-size: 10.5px;
+        font-weight: 650;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .cp-mobile-group.ativo {
+        color: var(--cp-primary);
+        background: var(--cp-primary-soft);
+    }
+
+    .cp-mobile-group.ativo::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 4px;
+        width: 18px;
+        height: 2px;
+        border-radius: 99px;
+        background: var(--cp-primary);
+        transform: translateX(-50%);
+    }
+
+    .cp-mobile-subnav-layer {
+        position: fixed;
+        z-index: 235;
+        inset: 0 0 calc(var(--cp-mobile-nav-height) + var(--cp-mobile-safe-bottom)) 0;
+        display: block;
+    }
+
+    .cp-mobile-subnav-layer[hidden] {
+        display: none !important;
+    }
+
+    .cp-mobile-subnav-backdrop {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: rgba(17, 24, 21, .28);
+        backdrop-filter: blur(2px);
+    }
+
+    .cp-mobile-subnav {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        bottom: 8px;
+        max-height: min(62dvh, 520px);
+        overflow-y: auto;
+        padding: 12px;
+        border: 1px solid var(--cp-border);
+        border-radius: 18px;
+        background: var(--cp-surface, #fff);
+        box-shadow: 0 22px 70px rgba(20, 30, 25, .22);
+    }
+
+    .cp-mobile-subnav[hidden] {
+        display: none !important;
+    }
+
+    .cp-mobile-subnav header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 3px 3px 11px;
+    }
+
+    .cp-mobile-subnav header small,
+    .cp-mobile-subnav header strong {
+        display: block;
+    }
+
+    .cp-mobile-subnav header small {
+        margin-bottom: 2px;
+        color: var(--cp-muted);
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: .13em;
+    }
+
+    .cp-mobile-subnav header strong {
+        font-size: 16px;
+    }
+
+    .cp-mobile-subnav-close {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--cp-border);
+        border-radius: 10px;
+        background: transparent;
+        color: var(--cp-muted);
+        font-size: 18px;
+    }
+
+    .cp-mobile-subnav-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .cp-mobile-subnav-links a {
+        min-width: 0;
+        min-height: 62px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px;
+        border: 1px solid var(--cp-border);
+        border-radius: 12px;
+        color: var(--cp-text);
+        font-size: 10.5px;
+        font-weight: 650;
+    }
+
+    .cp-mobile-subnav-links a > span:first-child {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        background: var(--cp-primary-soft);
+        color: var(--cp-primary);
+    }
+
+    .cp-mobile-subnav-links a.ativo {
+        border-color: color-mix(in srgb, var(--cp-primary) 38%, var(--cp-border));
+        background: var(--cp-primary-soft);
+        color: var(--cp-primary);
+    }
+
+    .cp-mobile-subnav-links .cp-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Evita elementos de largura fixa escapando da tela. */
+    .conteudo-inner > *,
+    .data-panel,
+    .surface-card,
+    .cartao,
+    .dashboard-grid-main > *,
+    .dashboard-grid-secondary > * {
+        min-width: 0;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    .conteudo-inner {
+        padding-inline: 11px !important;
+    }
+
+    .cp14-head-actions,
+    .summary-strip {
+        grid-template-columns: 1fr !important;
+    }
+
+    .summary-strip > div:first-child:nth-last-child(3) {
+        grid-column: auto;
+    }
+
+    .dashboard-primary {
+        gap: 7px !important;
+    }
+
+    .dashboard-primary .metric-clean {
+        padding: 11px !important;
+    }
+
+    .cp-mobile-group {
+        min-width: 88px;
+        padding-inline: 9px;
+    }
+
+    .cp-mobile-subnav-links {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dark mode da camada responsiva: usa os mesmos tokens do sistema. */
+html[data-theme="dark"] .cp-mobile-navigation,
+html[data-theme="dark"] .cp-mobile-subnav,
+html[data-theme="dark"] .responsive-list .table-row:not(.table-head),
+html[data-theme="dark"] .summary-strip > div,
+html[data-theme="dark"] .responsive-list .row-actions.cp-mobile-actions-open {
+    background-color: var(--cp-surface) !important;
+    border-color: var(--cp-border) !important;
+}
+
+html[data-theme="dark"] .cp-mobile-subnav-backdrop {
+    background: rgba(0, 0, 0, .48);
+}
+
+/* ============================================================
+   CashPilot 14.8.2 — QA responsivo e correções de estabilidade
+   Ajustes feitos após validação em telas de smartphone.
+   ============================================================ */
+
+@media (max-width: 767px) {
+    /* A página nunca deve criar uma segunda rolagem horizontal.
+       Apenas componentes que explicitamente permitem rolagem podem fazê-la. */
+    html,
+    body,
+    .layout,
+    .conteudo,
+    .conteudo-inner {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: clip !important;
+    }
+
+    .conteudo-inner {
+        box-sizing: border-box;
+    }
+
+    .conteudo-inner > *,
+    .conteudo-inner section,
+    .conteudo-inner article,
+    .conteudo-inner form,
+    .conteudo-inner nav,
+    .conteudo-inner aside,
+    .conteudo-inner header,
+    .conteudo-inner footer,
+    .conteudo-inner div {
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+
+    /* O widget flutuante não faz parte da experiência mobile.
+       O Copiloto continua disponível pela página própria em Inteligência. */
+    .copiloto-botao,
+    .copiloto-widget:not(.copiloto-full) {
+        display: none !important;
+    }
+
+    /* Cabeçalhos e ações não forçam a largura da tela. */
+    .page-head,
+    .topo-pagina,
+    .section-title,
+    .data-panel-head,
+    .cp14-investment-detail-head {
+        min-width: 0 !important;
+    }
+
+    .page-head,
+    .topo-pagina {
+        align-items: flex-start !important;
+    }
+
+    .page-head > div,
+    .topo-pagina > div,
+    .section-title > div,
+    .data-panel-head > div {
+        min-width: 0 !important;
+    }
+
+    .page-head h1,
+    .topo-pagina h1,
+    .section-title h2,
+    .data-panel-head h2,
+    .page-head p,
+    .topo-pagina p {
+        overflow-wrap: break-word;
+        word-break: normal;
+    }
+
+    /* Dashboard: mantém duas métricas por linha, mas sem quebrar palavras
+       ou deixar valores vazarem de um cartão para outro. */
+    .dashboard-primary {
+        width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .dashboard-primary > *,
+    .dashboard-grid-main > *,
+    .dashboard-grid-secondary > * {
+        min-width: 0 !important;
+        width: 100%;
+    }
+
+    .dashboard-primary .metric-clean {
+        overflow: hidden;
+    }
+
+    .dashboard-primary .metric-clean span,
+    .dashboard-primary .metric-clean small,
+    .dashboard-primary .metric-clean strong {
+        max-width: 100%;
+        word-break: normal !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .dashboard-primary .metric-clean strong {
+        font-size: clamp(15px, 4.2vw, 19px) !important;
+        line-height: 1.15;
+    }
+
+    .dashboard-primary .metric-link small {
+        display: block;
+        line-height: 1.35;
+    }
+
+    .cp14-patrimony-split,
+    .cp143-status-grid,
+    .cp14-kpi-grid,
+    .cp14-allocation-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .cp14-patrimony-split > *,
+    .cp143-status-grid > *,
+    .cp14-kpi-grid > *,
+    .cp14-allocation-cards > * {
+        min-width: 0 !important;
+    }
+
+    /* Listagens: a estrutura mobile passa a usar os rótulos reais da tabela,
+       adicionados pelo mobile-navigation.js, em vez de depender da posição
+       fixa de cada coluna. */
+    .responsive-list {
+        width: 100%;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    .responsive-list .table-row:not(.table-head) {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 7px 12px !important;
+        width: 100%;
+        padding: 14px 44px 14px 14px !important;
+        overflow: visible;
+    }
+
+    .responsive-list .table-row:not(.table-head) > .cp-mobile-cell {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+        min-width: 0 !important;
+        text-align: left !important;
+        color: var(--cp-text);
+        font-size: 11px !important;
+        overflow-wrap: break-word;
+    }
+
+    .responsive-list .table-row:not(.table-head) > .cell-main {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        padding-right: 4px;
+    }
+
+    .responsive-list .table-row:not(.table-head).cp-mobile-has-value > .cp-mobile-value {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        align-self: start;
+        max-width: 132px;
+        font-size: 12px !important;
+        font-weight: 750;
+        text-align: right !important;
+        white-space: nowrap;
+    }
+
+    .responsive-list .table-row:not(.table-head) > .cp-mobile-cell:not(.cell-main):not(.cp-mobile-value) {
+        display: grid;
+        grid-template-columns: minmax(72px, auto) minmax(0, 1fr);
+        align-items: baseline;
+        gap: 8px;
+        padding-top: 1px;
+        color: var(--cp-muted);
+    }
+
+    .responsive-list .table-row:not(.table-head) > .cp-mobile-cell:not(.cell-main):not(.cp-mobile-value)::before {
+        content: attr(data-mobile-label);
+        color: var(--cp-muted);
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+
+    .responsive-list .row-actions.cp-mobile-actions-open {
+        z-index: 60;
+        max-width: min(170px, calc(100vw - 42px));
+    }
+
+    /* Metas: havia uma regra desktop posterior com !important que mantinha
+       duas colunas no celular. No mobile, lista e detalhe são empilhados. */
+    .metas-app {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .metas-lista {
+        position: static !important;
+        top: auto !important;
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .meta-contato {
+        width: 100%;
+        grid-template-columns: 34px minmax(0, 1fr) auto !important;
+    }
+
+    .meta-detalhe {
+        width: 100% !important;
+        min-height: 0 !important;
+        padding: 16px !important;
+    }
+
+    .meta-detalhe-topo {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        align-items: start !important;
+        gap: 12px !important;
+    }
+
+    .meta-detalhe-topo h2 {
+        font-size: clamp(20px, 6vw, 24px) !important;
+        overflow-wrap: break-word;
+    }
+
+    .meta-circulo {
+        width: 62px !important;
+        height: 62px !important;
+        flex: 0 0 62px;
+    }
+
+    .meta-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin: 16px 0 !important;
+    }
+
+    .meta-kpis > div {
+        min-width: 0;
+    }
+
+    .meta-kpis strong {
+        overflow-wrap: break-word;
+    }
+
+    .meta-copiloto {
+        grid-template-columns: auto minmax(0, 1fr) !important;
+        gap: 10px !important;
+        padding: 13px !important;
+    }
+
+    .meta-copiloto .btn {
+        grid-column: 1 / -1 !important;
+        width: 100%;
+    }
+
+    .meta-mov-form {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .meta-historico-item {
+        align-items: flex-start !important;
+        flex-wrap: wrap;
+    }
+
+    .meta-historico-item > span {
+        min-width: 0 !important;
+    }
+
+    /* Investimentos: a experiência de duas colunas do desktop vira fluxo
+       vertical sem perder a carteira nem o detalhe selecionado. */
+    .cp14-investment-layout,
+    .cp14-investment-app,
+    .cp14-planning-layout,
+    .cp14-cash-layout {
+        grid-template-columns: minmax(0, 1fr) !important;
+        width: 100%;
+    }
+
+    .cp14-investment-list,
+    .cp14-investment-detail {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cp14-investment-item {
+        grid-template-columns: 36px minmax(0, 1fr) auto !important;
+    }
+
+    .cp14-investment-item-value {
+        max-width: 112px;
+        white-space: nowrap;
+    }
+
+    .cp14-investment-detail-head {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .cp14-detail-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .cp14-investment-actions,
+    .cp14-investment-meta {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .cp14-investment-meta form,
+    .cp14-compact-form {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .cp14-history-row {
+        grid-template-columns: minmax(74px, auto) minmax(0, 1fr) !important;
+    }
+
+    .cp14-history-row > :last-child {
+        grid-column: 2;
+        justify-self: end;
+    }
+
+    /* Visão Financeira / Planejamento: cards completos, sem largura herdada
+       do desktop e com duas métricas apenas quando o conteúdo suporta. */
+    .cp143-status-grid,
+    .cp143-insight-grid,
+    .cp14-allocation-cards,
+    .planejamento-resumo,
+    .business-kpis,
+    .negocio-resumo,
+    .compromissos-grid,
+    .finance-saved-grid,
+    .finance-saved-metrics {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cp143-insight-grid,
+    .business-kpis,
+    .negocio-resumo,
+    .compromissos-grid,
+    .finance-saved-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    /* Perfil e configurações. */
+    .profile-settings-grid,
+    .profile-settings-stack,
+    .profile-account-panel,
+    .profile-identity-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .profile-settings-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .profile-readonly-row,
+    .profile-preference-row,
+    .profile-email-current,
+    .profile-email-action {
+        min-width: 0;
+        flex-wrap: wrap;
+    }
+
+    /* Bottom sheet: garante que os botões de Receita, Despesa e os demais
+       drawers fiquem realmente interativos acima da navegação inferior. */
+    .drawer-overlay {
+        z-index: 7000 !important;
+    }
+
+    .cp-drawer {
+        z-index: 7010 !important;
+        top: auto !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: min(88dvh, 760px) !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transform: translate3d(0, 105%, 0) !important;
+        border-left: 0 !important;
+        border-top: 1px solid var(--cp-border) !important;
+        border-radius: 20px 20px 0 0 !important;
+    }
+
+    .cp-drawer.aberto {
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+
+    .drawer-head {
+        padding: 17px 16px 14px !important;
+    }
+
+    .drawer-body {
+        padding-inline: 16px !important;
+        padding-bottom: calc(
+            24px +
+            var(--cp-mobile-nav-height) +
+            var(--cp-mobile-safe-bottom)
+        ) !important;
+    }
+
+    /* Modal de logout/exclusão acima de qualquer navegação mobile. */
+    .cp-confirm-overlay {
+        z-index: 8000 !important;
+        padding: 14px !important;
+    }
+
+    .cp-confirm-modal {
+        width: min(100%, 430px) !important;
+        margin: auto !important;
+        grid-template-columns: 38px minmax(0, 1fr) !important;
+        padding: 18px !important;
+    }
+
+    .cp-confirm-actions {
+        flex-wrap: wrap;
+    }
+
+    /* Navegação inferior: somente ela pode deslizar horizontalmente. */
+    .cp-mobile-navigation {
+        max-width: 100vw;
+        overflow: hidden;
+    }
+
+    .cp-mobile-groups {
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        padding-inline: 14px !important;
+        scroll-padding-inline: 14px;
+        touch-action: pan-x;
+        overscroll-behavior-x: contain;
+    }
+
+    .cp-mobile-group:first-child {
+        margin-left: 0;
+    }
+
+    .cp-mobile-group:last-child {
+        margin-right: 2px;
+    }
+
+    .cp-mobile-subnav-layer,
+    .cp-mobile-subnav,
+    .cp-mobile-subnav-links {
+        max-width: 100vw;
+    }
+
+    .cp-mobile-subnav {
+        left: 12px !important;
+        right: 12px !important;
+        width: auto !important;
+    }
+
+    .cp-mobile-subnav-links a {
+        overflow: hidden;
+    }
+
+    .cp-mobile-subnav-links a > span:last-child {
+        min-width: 0;
+        overflow-wrap: break-word;
+    }
+}
+
+/* O suporte oficial começa em 360px, mas abaixo disso o sistema deve
+   continuar degradando de forma segura, sem jogar painéis para fora. */
+@media (max-width: 359px) {
+    .dashboard-primary,
+    .cp14-patrimony-split,
+    .cp143-status-grid,
+    .cp14-kpi-grid,
+    .cp14-allocation-cards,
+    .meta-kpis,
+    .cp14-detail-kpis {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .meta-detalhe-topo {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .meta-circulo {
+        justify-self: start;
+    }
+
+    .cp-mobile-group {
+        min-width: 84px !important;
+    }
+}
+
+/* ============================================================
+   CashPilot 14.8.2 — Ajustes finos de mobile
+   Corrige compressão de títulos/gráficos e refina a página do
+   Copiloto sem alterar o comportamento das versões desktop.
+   ============================================================ */
+
+@media (max-width: 767px) {
+    /*
+     * Títulos de seções com controles ao lado não podem disputar a
+     * mesma largura em telas estreitas. O conteúdo passa a ocupar a
+     * linha inteira e os controles ficam abaixo, preservando a leitura.
+     */
+    .section-title {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .section-title > div,
+    .section-title > header,
+    .section-title > section,
+    .section-title > nav {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        flex: 1 1 auto !important;
+    }
+
+    .section-title .eyebrow,
+    .section-title h2,
+    .section-title h3,
+    .section-title p,
+    .data-panel-head h2,
+    .data-panel-head h3 {
+        width: auto !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+        overflow-wrap: normal !important;
+        writing-mode: horizontal-tb !important;
+        text-orientation: mixed !important;
+    }
+
+    .section-title h2,
+    .section-title h3 {
+        line-height: 1.2 !important;
+    }
+
+    /* Controles de período/tipo continuam completos, mas sem esmagar o título. */
+    .section-title .periodos-grafico,
+    .periodos-grafico {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        flex: 0 0 auto !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .section-title .periodos-grafico::-webkit-scrollbar,
+    .periodos-grafico::-webkit-scrollbar {
+        display: none;
+    }
+
+    .periodos-grafico > * {
+        flex: 0 0 auto !important;
+        min-width: max-content !important;
+    }
+
+    /* Relatórios: cada cartão e cada gráfico recebe a largura real do aparelho. */
+    .rel145-grid,
+    .rel145-grid > *,
+    .rel145-grid .cartao,
+    .rel145-grid .section-title,
+    .rel145-grid .container-grafico,
+    .rel145-chart {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .rel145-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .rel145-grid .cartao {
+        overflow: hidden !important;
+    }
+
+    .rel145-chart {
+        height: clamp(250px, 72vw, 330px) !important;
+        min-height: 250px !important;
+        position: relative !important;
+    }
+
+    .rel145-chart canvas,
+    .container-grafico canvas {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    /* Linhas textuais de outros módulos também não podem virar coluna de letras. */
+    .surface-card h2,
+    .surface-card h3,
+    .cartao h2,
+    .cartao h3,
+    .data-panel h2,
+    .data-panel h3,
+    .chart-wrap h2,
+    .chart-wrap h3,
+    .chart-container h2,
+    .chart-container h3 {
+        word-break: normal !important;
+        overflow-wrap: break-word !important;
+        writing-mode: horizontal-tb !important;
+        text-orientation: mixed !important;
+    }
+
+    /* ========================================================
+       Copiloto mobile
+       A página deixa de parecer um painel desktop recortado e passa
+       a usar uma composição própria, mantendo a identidade atual.
+       ======================================================== */
+    .copiloto-full-head {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin: 2px 0 12px !important;
+    }
+
+    .copiloto-full-head > div {
+        display: block !important;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .copiloto-full-head .eyebrow,
+    .copiloto-full-head p {
+        display: none !important;
+    }
+
+    .copiloto-full-head h1 {
+        display: block !important;
+        margin: 0 !important;
+        font-size: 22px !important;
+        line-height: 1.1 !important;
+        white-space: nowrap !important;
+    }
+
+    .copiloto-full-head .btn {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        min-height: 40px !important;
+        margin: 0 !important;
+        padding: 9px 12px !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        font-size: 11px !important;
+    }
+
+    .copiloto-workspace {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: calc(
+            100dvh - 54px - var(--cp-mobile-nav-height) -
+            var(--cp-mobile-safe-bottom) - 92px
+        ) !important;
+        min-height: 520px !important;
+        display: block !important;
+        position: relative !important;
+        overflow: hidden !important;
+        border-radius: 16px !important;
+    }
+
+    .copiloto-workspace.history-collapsed,
+    .copiloto-workspace:not(.history-collapsed) {
+        grid-template-columns: none !important;
+    }
+
+    .copiloto-chat-shell {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+        min-width: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    .copiloto-history {
+        position: absolute !important;
+        inset: 0 auto 0 0 !important;
+        width: min(86vw, 310px) !important;
+        max-width: calc(100% - 28px) !important;
+        height: 100% !important;
+        z-index: 40 !important;
+        background: var(--cp-surface) !important;
+        border-right: 1px solid var(--cp-border) !important;
+        box-shadow: 18px 0 48px rgba(20, 30, 25, .16) !important;
+        transition: transform .2s ease, opacity .2s ease !important;
+    }
+
+    .copiloto-workspace.history-collapsed .copiloto-history {
+        transform: translateX(-104%) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    .copiloto-workspace:not(.history-collapsed) .copiloto-history {
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    .chat-panel-head {
+        width: 100% !important;
+        min-height: 58px !important;
+        padding: 9px 11px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        flex: 0 0 auto !important;
+    }
+
+    .chat-brand {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    .chat-brand > div {
+        min-width: 0 !important;
+    }
+
+    .chat-brand strong,
+    .chat-brand small {
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    .chat-context-badge {
+        flex: 0 0 auto !important;
+        max-width: 92px !important;
+        text-align: center !important;
+        white-space: normal !important;
+        line-height: 1.25 !important;
+    }
+
+    .chat-messages {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        padding: 18px 14px 14px !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .chat-welcome {
+        width: 100% !important;
+        max-width: 460px !important;
+        margin: clamp(34px, 9vh, 86px) auto 24px !important;
+        padding: 0 8px !important;
+        text-align: center !important;
+    }
+
+    .chat-welcome h2 {
+        max-width: 100% !important;
+        margin-inline: auto !important;
+        font-size: clamp(23px, 6.7vw, 30px) !important;
+        line-height: 1.16 !important;
+        word-break: normal !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .chat-welcome p {
+        max-width: 360px !important;
+        margin-inline: auto !important;
+        font-size: 11px !important;
+        line-height: 1.6 !important;
+    }
+
+    .chat-message {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .chat-message.assistant .message-bubble {
+        max-width: calc(100% - 40px) !important;
+    }
+
+    .chat-message.user .message-bubble {
+        max-width: min(84%, 340px) !important;
+    }
+
+    .chat-thinking {
+        width: calc(100% - 28px) !important;
+        flex: 0 0 auto !important;
+    }
+
+    .chat-bottom {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 auto !important;
+        padding: 8px 10px 10px !important;
+        background: var(--cp-surface) !important;
+    }
+
+    .chat-followups {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 7px !important;
+        padding: 0 1px !important;
+    }
+
+    .chat-composer {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 0 4px !important;
+    }
+
+    .chat-composer textarea {
+        min-width: 0 !important;
+    }
+
+    .chat-disclaimer {
+        padding-inline: 4px !important;
+        font-size: 7.5px !important;
+        line-height: 1.35 !important;
+    }
+}
+
+@media (max-width: 390px) {
+    .copiloto-full-head h1 {
+        font-size: 20px !important;
+    }
+
+    .copiloto-full-head .btn {
+        padding-inline: 10px !important;
+        font-size: 10.5px !important;
+    }
+
+    .chat-context-badge {
+        max-width: 78px !important;
+        font-size: 8px !important;
+    }
+
+    .chat-panel-head {
+        padding-inline: 9px !important;
+    }
+}

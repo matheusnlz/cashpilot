@@ -1,0 +1,1030 @@
+/* ============================================================
+   CashPilot 14 — módulos funcionais finais
+   Novos componentes apenas; responsividade completa fica para fase futura.
+   ============================================================ */
+.cp14-head-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.cp14-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.cp14-kpi-grid > article {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--cp141-border);
+    border-radius: 14px;
+    background: var(--cp141-surface);
+}
+.cp14-kpi-grid > article > span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--cp141-muted);
+    font-size: 9px;
+    font-weight: 700;
+}
+.cp14-kpi-grid > article > strong {
+    display: block;
+    color: var(--cp141-text);
+    font-size: 18px;
+    line-height: 1.15;
+    letter-spacing: -.025em;
+}
+.cp14-kpi-grid > article > small {
+    display: block;
+    margin-top: 6px;
+    color: var(--cp141-subtle);
+    font-size: 8px;
+    line-height: 1.4;
+}
+.cp14-investment-layout,
+.cp14-planning-layout,
+.cp14-cash-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(300px, .8fr);
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.cp14-allocation-bar {
+    display: flex;
+    width: 100%;
+    height: 12px;
+    margin: 18px 0;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--cp141-surface-2);
+}
+.cp14-allocation-bar i {
+    display: block;
+    min-width: 2px;
+}
+.cp14-class-0 {
+    background: #315e59;
+}
+.cp14-class-1 {
+    background: #6f8276;
+}
+.cp14-class-2 {
+    background: #88948d;
+}
+.cp14-class-3 {
+    background: #536d67;
+}
+.cp14-class-4 {
+    background: #a28d70;
+}
+.cp14-class-5 {
+    background: #6c7470;
+}
+.cp14-class-6 {
+    background: #8a746f;
+}
+html[data-theme="dark"] .cp14-class-0 {
+    background: #78a79d;
+}
+html[data-theme="dark"] .cp14-class-1 {
+    background: #8ba394;
+}
+html[data-theme="dark"] .cp14-class-2 {
+    background: #9aa49e;
+}
+html[data-theme="dark"] .cp14-class-3 {
+    background: #6f938a;
+}
+html[data-theme="dark"] .cp14-class-4 {
+    background: #b7a07d;
+}
+html[data-theme="dark"] .cp14-class-5 {
+    background: #838e88;
+}
+html[data-theme="dark"] .cp14-class-6 {
+    background: #a88d87;
+}
+.cp14-allocation-list {
+    display: grid;
+    gap: 9px;
+}
+.cp14-allocation-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--cp141-border);
+}
+.cp14-allocation-list > div:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+.cp14-allocation-list span,
+.cp14-allocation-list strong {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.cp14-allocation-list strong {
+    color: var(--cp141-text);
+    font-size: 10px;
+}
+.cp14-allocation-list strong small {
+    color: var(--cp141-muted);
+    font-weight: 600;
+}
+.cp14-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+}
+.cp14-invest-readiness {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 14px 0 18px;
+}
+.cp14-invest-readiness > span {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    border-radius: 11px;
+    background: var(--cp141-accent-soft);
+    color: var(--cp141-accent);
+}
+.cp14-invest-readiness p {
+    margin-top: 5px;
+    color: var(--cp141-muted);
+    font-size: 9px;
+    line-height: 1.55;
+}
+.cp14-investment-app {
+    display: grid;
+    grid-template-columns: 310px minmax(0, 1fr);
+    gap: 12px;
+}
+.cp14-investment-list {
+    align-self: start;
+}
+.cp14-count {
+    min-width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--cp141-surface-2);
+    color: var(--cp141-muted);
+    font-size: 8px;
+    font-weight: 700;
+}
+.cp14-investment-item {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-top: 4px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    color: var(--cp141-text);
+    text-decoration: none;
+}
+.cp14-investment-item:hover {
+    background: var(--cp141-surface-2);
+}
+.cp14-investment-item.ativo {
+    border-color: var(--cp141-border-strong);
+    background: var(--cp141-accent-soft);
+}
+.cp14-investment-symbol {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--cp141-surface-2);
+    color: var(--cp141-accent);
+}
+.cp14-investment-item > div:nth-child(2) {
+    min-width: 0;
+}
+.cp14-investment-item strong,
+.cp14-investment-item small {
+    display: block;
+}
+.cp14-investment-item small {
+    margin-top: 3px;
+    color: var(--cp141-muted);
+    font-size: 7.8px;
+}
+.cp14-investment-item-value {
+    text-align: right;
+}
+.cp14-investment-detail-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+.cp14-investment-detail-head h2 {
+    margin: 4px 0;
+    font-size: 20px;
+}
+.cp14-investment-detail-head p {
+    color: var(--cp141-muted);
+    font-size: 9px;
+}
+.cp14-detail-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 18px 0;
+}
+.cp14-detail-kpis > div {
+    padding: 12px;
+    border: 1px solid var(--cp141-border);
+    border-radius: 11px;
+    background: var(--cp141-surface-2);
+}
+.cp14-detail-kpis span,
+.cp14-detail-kpis strong {
+    display: block;
+}
+.cp14-detail-kpis span {
+    margin-bottom: 5px;
+    color: var(--cp141-muted);
+    font-size: 8px;
+}
+.cp14-detail-kpis strong {
+    font-size: 11px;
+}
+.cp14-investment-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 16px;
+}
+.cp14-compact-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: end;
+    padding: 12px;
+    border: 1px solid var(--cp141-border);
+    border-radius: 12px;
+    background: var(--cp141-surface-2);
+}
+.cp14-compact-form label {
+    grid-column: 1 / -1;
+    color: var(--cp141-muted);
+    font-size: 8px;
+    font-weight: 700;
+}
+.cp14-compact-form label input {
+    width: 100%;
+    margin-top: 5px;
+}
+.cp14-investment-meta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(270px, .7fr);
+    align-items: end;
+    gap: 20px;
+    padding: 15px 0;
+    border-top: 1px solid var(--cp141-border);
+    border-bottom: 1px solid var(--cp141-border);
+}
+.cp14-investment-meta p {
+    max-width: 520px;
+    margin-top: 5px;
+    color: var(--cp141-muted);
+    font-size: 8.5px;
+    line-height: 1.5;
+}
+.cp14-investment-meta form {
+    display: flex;
+    gap: 7px;
+}
+.cp14-investment-meta select {
+    min-width: 0;
+    flex: 1;
+}
+.cp14-history {
+    margin-top: 16px;
+}
+.cp14-history-row {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    border-bottom: 1px solid var(--cp141-border);
+}
+.cp14-history-type {
+    display: inline-flex;
+    justify-content: center;
+    padding: 5px 7px;
+    border-radius: 7px;
+    background: var(--cp141-surface-2);
+    color: var(--cp141-muted);
+    font-size: 7.5px;
+    font-weight: 700;
+}
+.cp14-history-type.aporte {
+    color: var(--cp141-success);
+    background: var(--cp141-success-soft);
+}
+.cp14-history-type.retirada {
+    color: var(--cp141-danger);
+    background: var(--cp141-danger-soft);
+}
+.cp14-history-row small {
+    display: block;
+    margin-top: 2px;
+    color: var(--cp141-muted);
+    font-size: 8px;
+}
+.cp14-danger-zone {
+    margin-top: 18px;
+}
+.cp14-danger-zone .excluir {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--cp141-danger);
+    font-size: 8.5px;
+    cursor: pointer;
+}
+.cp14-migration-warning {
+    max-width: 780px;
+}
+.cp14-migration-warning code {
+    padding: 2px 5px;
+    border-radius: 5px;
+    background: var(--cp141-surface-2);
+}
+/* Planejamento mensal */
+.cp14-planning-form {
+    max-width: 860px;
+}
+.cp14-category-plan {
+    margin: 20px 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--cp141-border);
+}
+.cp14-category-plan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+.cp14-category-plan-grid label {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 130px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--cp141-border);
+    border-radius: 10px;
+    background: var(--cp141-surface-2);
+    color: var(--cp141-text);
+    font-size: 8.5px;
+    font-weight: 600;
+}
+.cp14-plan-progress-list {
+    display: grid;
+    gap: 15px;
+}
+.cp14-plan-progress-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 7px;
+}
+.cp14-plan-progress-head strong,
+.cp14-plan-progress-head span {
+    font-size: 9px;
+}
+.cp14-plan-progress-list small {
+    display: block;
+    margin-top: 5px;
+    color: var(--cp141-muted);
+    font-size: 8px;
+}
+.learning-progress span.cp14-over {
+    background: var(--cp141-danger) !important;
+}
+.cp14-month-allocation {
+    margin-top: 12px;
+}
+.cp14-allocation-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+.cp14-allocation-cards > div {
+    padding: 12px;
+    border: 1px solid var(--cp141-border);
+    border-radius: 10px;
+    background: var(--cp141-surface-2);
+}
+.cp14-allocation-cards span,
+.cp14-allocation-cards strong {
+    display: block;
+}
+.cp14-allocation-cards span {
+    color: var(--cp141-muted);
+    font-size: 8px;
+}
+.cp14-allocation-cards strong {
+    margin-top: 5px;
+    font-size: 11px;
+}
+/* Projeção de caixa */
+.cp14-cash-chart {
+    height: 300px;
+}
+.cp14-lowest-cash {
+    padding: 18px;
+    border: 1px solid var(--cp141-border);
+    border-radius: 12px;
+    background: var(--cp141-surface-2);
+}
+.cp14-lowest-cash strong,
+.cp14-lowest-cash span {
+    display: block;
+}
+.cp14-lowest-cash strong {
+    font-size: 26px;
+}
+.cp14-lowest-cash span {
+    margin-top: 5px;
+    color: var(--cp141-muted);
+    font-size: 9px;
+}
+.cp14-cash-checkpoints {
+    display: grid;
+    gap: 0;
+    margin-top: 13px;
+}
+.cp14-cash-checkpoints > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cp141-border);
+}
+.cp14-cash-checkpoints span {
+    color: var(--cp141-muted);
+    font-size: 8.5px;
+}
+.cp14-commitment-list {
+    display: grid;
+}
+.cp14-commitment-list > div {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--cp141-border);
+}
+.cp14-commitment-list small {
+    display: block;
+    margin-top: 3px;
+    color: var(--cp141-muted);
+    font-size: 8px;
+}
+/* Dashboard - patrimônio */
+.cp14-patrimony-value strong,
+.cp14-patrimony-value span {
+    display: block;
+}
+.cp14-patrimony-value strong {
+    margin-top: 4px;
+    font-size: 22px;
+}
+.cp14-patrimony-value span {
+    margin-top: 4px;
+    color: var(--cp141-muted);
+    font-size: 8px;
+}
+.cp14-patrimony-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0 8px;
+}
+.cp14-patrimony-split > div {
+    padding: 10px;
+    border-radius: 9px;
+    background: var(--cp141-surface-2);
+}
+.cp14-patrimony-split span,
+.cp14-patrimony-split strong {
+    display: block;
+}
+.cp14-patrimony-split span {
+    color: var(--cp141-muted);
+    font-size: 8px;
+}
+.cp14-patrimony-split strong {
+    margin-top: 3px;
+    font-size: 10px;
+}
+/* Corrige a linguagem visual dos novos ícones de Receita/Despesa. */
+.menu-item[href="receitas.php"] .menu-icone {
+    color: var(--cp141-success);
+}
+.menu-item[href="despesas.php"] .menu-icone {
+    color: var(--cp141-danger);
+}
+.menu-item[href="investimentos.php"] .menu-icone,
+.menu-item[href="projecao_caixa.php"] .menu-icone {
+    color: var(--cp141-accent);
+}
+/* Nenhuma responsividade completa nesta fase.
+   Apenas evita que novos componentes forcem overflow no desktop. */
+.cp14-kpi-grid,
+.cp14-investment-layout,
+.cp14-investment-app,
+.cp14-planning-layout,
+.cp14-cash-layout,
+.cp14-detail-kpis,
+.cp14-allocation-cards {
+    min-width: 0;
+}
+.cp14-kpi-grid > *,
+.cp14-investment-layout > *,
+.cp14-investment-app > *,
+.cp14-planning-layout > *,
+.cp14-cash-layout > * {
+    min-width: 0;
+}
+/* CashPilot 14.3 - Visão Financeira integrada */
+.cp143-status-grid {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 16px;
+    margin-bottom: 18px
+}
+.cp143-status-grid article {
+    background: var(--card-bg,#fff);
+    border: 1px solid var(--border-color,#e5e8e6);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px
+}
+.cp143-status-grid span {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    opacity: .68
+}
+.cp143-status-grid strong {
+    font-size: 24px
+}
+.cp143-status-grid small {
+    opacity: .68
+}
+.cp143-insight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px
+}
+.cp143-insight-list {
+    display: grid;
+    gap: 10px
+}
+.cp143-insight-list>div {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color,#e7e9e7)
+}
+.cp143-insight-list>div:last-child {
+    border-bottom: 0
+}
+.cp143-insight-list i {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-style: normal;
+    font-weight: 700;
+    background: rgba(49,94,89,.1)
+}
+.alerta-list i {
+    background: rgba(177,126,41,.12)
+}
+.cp143-insight-list p {
+    margin: 2px 0 0;
+    line-height: 1.45
+}
+.cp143-patrimonio>strong {
+    font-size: 34px
+}
+.cp143-patrimonio>div {
+    display: grid;
+    gap: 8px;
+    margin: 18px 0
+}
+.cp143-patrimonio span {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px
+}
+.cp143-goals {
+    display: grid;
+    gap: 18px
+}
+.cp143-goals>div>div:first-child {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px
+}
+.cp143-goals small {
+    display: block;
+    margin-top: 7px;
+    opacity: .7
+}
+.cp143-business-flow {
+    display: grid;
+    grid-template-columns: repeat(7,auto);
+    gap: 14px;
+    align-items: center
+}
+.cp143-business-flow>div {
+    padding: 14px;
+    border: 1px solid var(--border-color,#e7e9e7);
+    border-radius: 14px;
+    display: grid;
+    gap: 6px
+}
+.cp143-business-flow>div span {
+    font-size: 12px;
+    opacity: .65
+}
+.cp143-business-flow>b {
+    opacity: .45
+}
+.cp143-plan-status {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 700
+}
+.cp143-plan-status.normal {
+    background: rgba(49,94,89,.1)
+}
+.cp143-plan-status.atencao {
+    background: rgba(177,126,41,.12)
+}
+.cp143-plan-status.ultrapassado {
+    background: rgba(160,62,62,.12)
+}
+/* ============================================================
+   CashPilot 14.3.1 — Visão Financeira + Posso comprar?
+   ============================================================ */
+/* Correção explícita do tema escuro nos cards da Visão Financeira. */
+html[data-theme="dark"] .cp143-status-grid article,
+html[data-theme="dark"] .cp143-business-flow > div {
+    background: var(--cp-surface);
+    border-color: var(--cp-border);
+    color: var(--cp-text);
+}
+html[data-theme="dark"] .cp143-status-grid article span,
+html[data-theme="dark"] .cp143-status-grid article small,
+html[data-theme="dark"] .cp143-business-flow > div span {
+    color: var(--cp-muted);
+    opacity: 1;
+}
+html[data-theme="dark"] .cp143-insight-list > div {
+    border-color: var(--cp-border);
+}
+html[data-theme="dark"] .cp143-insight-list i {
+    background: var(--cp-primary-soft);
+    color: var(--cp-primary);
+}
+html[data-theme="dark"] .cp143-insight-list.alerta-list i {
+    background: var(--cp141-warning-soft, #2c261c);
+    color: var(--cp141-warning, #d2aa6d);
+}
+/* Posso comprar? — leitura de decisão mais completa. */
+.cp1431-buy-head {
+    align-items: flex-start;
+}
+.cp1431-buy-baseline {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+}
+.cp1431-buy-baseline article {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--cp141-border, #dde3de);
+    border-radius: 16px;
+    background: var(--cp141-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.cp1431-buy-baseline span,
+.cp1431-context-list span,
+.cp1431-comparison span,
+.cp1431-cost-grid span {
+    color: var(--cp141-muted, #6d7771);
+    font-size: 12px;
+}
+.cp1431-buy-baseline > article > span {
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+.cp1431-buy-baseline strong {
+    font-size: 22px;
+    line-height: 1.15;
+}
+.cp1431-buy-baseline small {
+    color: var(--cp141-muted, #6d7771);
+    line-height: 1.4;
+}
+.cp1431-buy-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+    gap: 18px;
+    align-items: start;
+    margin-bottom: 18px;
+}
+.cp1431-buy-form-card,
+.cp1431-buy-context {
+    min-width: 0;
+}
+.cp1431-installment-fields {
+    padding: 16px;
+    margin: 2px 0 18px;
+    border: 1px solid var(--cp141-border, #dde3de);
+    border-radius: 14px;
+    background: var(--cp141-surface-2, #f2f4f1);
+}
+.cp1431-installment-fields[hidden] {
+    display: none;
+}
+.cp1431-optional {
+    color: var(--cp141-subtle, #8b948f);
+    font-size: 11px;
+    font-weight: 500;
+}
+.cp1431-percent-input {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+}
+.cp1431-percent-input > span {
+    color: var(--cp141-muted, #6d7771);
+    font-size: 13px;
+    white-space: nowrap;
+}
+.cp1431-buy-disclaimer {
+    margin: 14px 0 0;
+}
+.cp1431-context-list {
+    display: grid;
+    gap: 0;
+}
+.cp1431-context-list > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--cp141-border, #dde3de);
+}
+.cp1431-context-list > div:last-child {
+    border-bottom: 0;
+}
+.cp1431-context-list strong {
+    text-align: right;
+    font-size: 14px;
+}
+.cp1431-context-note {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 13px;
+    background: var(--cp141-surface-2, #f2f4f1);
+}
+.cp1431-context-note p {
+    margin: 6px 0 0;
+    color: var(--cp141-muted, #6d7771);
+    line-height: 1.5;
+}
+.cp1431-buy-result {
+    display: grid;
+    gap: 18px;
+    scroll-margin-top: 24px;
+}
+.cp1431-buy-result[hidden] {
+    display: none;
+}
+.cp1431-result-hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: center;
+    padding: 22px;
+    border: 1px solid var(--cp141-border, #dde3de);
+    border-radius: 18px;
+    background: var(--cp141-surface, #fff);
+}
+.cp1431-result-hero h2 {
+    margin: 4px 0 5px;
+}
+.cp1431-result-hero p {
+    margin: 0;
+    color: var(--cp141-muted, #6d7771);
+}
+.cp1431-result-hero.confortavel {
+    border-color: color-mix(in srgb, var(--cp141-success, #477858) 38%, var(--cp141-border, #dde3de));
+}
+.cp1431-result-hero.atencao {
+    border-color: color-mix(in srgb, var(--cp141-warning, #9c733b) 45%, var(--cp141-border, #dde3de));
+}
+.cp1431-result-hero.alto,
+.cp1431-result-hero.critico {
+    border-color: color-mix(in srgb, var(--cp141-danger, #a5534d) 45%, var(--cp141-border, #dde3de));
+}
+.cp1431-impact-badge {
+    min-width: 230px;
+    max-width: 330px;
+    padding: 13px 15px;
+    border-radius: 13px;
+    background: var(--cp141-surface-2, #f2f4f1);
+    display: grid;
+    gap: 4px;
+}
+.cp1431-impact-badge span {
+    color: var(--cp141-muted, #6d7771);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+.cp1431-impact-badge strong {
+    font-size: 14px;
+    line-height: 1.35;
+}
+.cp1431-result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+.cp1431-result-grid > * {
+    min-width: 0;
+}
+.cp1431-result-grid h3,
+.cp1431-result-conclusion h3 {
+    margin: 5px 0 14px;
+}
+.cp1431-comparison,
+.cp1431-cost-grid {
+    display: grid;
+    gap: 0;
+}
+.cp1431-comparison > div,
+.cp1431-cost-grid > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cp141-border, #dde3de);
+}
+.cp1431-comparison > div:last-child,
+.cp1431-cost-grid > div:last-child {
+    border-bottom: 0;
+}
+.cp1431-comparison strong,
+.cp1431-cost-grid strong {
+    text-align: right;
+}
+.cp1431-buy-signals {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+}
+.cp1431-buy-signals li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.5;
+}
+.cp1431-buy-signals i {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-style: normal;
+    font-weight: 700;
+    background: var(--cp141-success-soft, #e8f1ea);
+    color: var(--cp141-success, #477858);
+}
+.cp1431-buy-signals.alerta-list i {
+    background: var(--cp141-warning-soft, #f5eee2);
+    color: var(--cp141-warning, #9c733b);
+}
+.cp1431-buy-signals .neutro i {
+    background: var(--cp141-surface-2, #f2f4f1);
+    color: var(--cp141-muted, #6d7771);
+}
+.cp1431-result-conclusion {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: center;
+}
+.cp1431-result-conclusion > div {
+    min-width: 0;
+}
+.cp1431-result-conclusion > div > p {
+    margin: 0;
+    color: var(--cp141-muted, #6d7771);
+    line-height: 1.55;
+}
+.cp1431-result-note {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--cp141-border, #dde3de);
+}
+.cp1431-result-note p {
+    margin: 4px 0;
+    color: var(--cp141-muted, #6d7771);
+    font-size: 13px;
+}
+html[data-theme="dark"] .cp1431-buy-baseline article,
+html[data-theme="dark"] .cp1431-result-hero {
+    background: var(--cp141-surface);
+    border-color: var(--cp141-border);
+    color: var(--cp141-text);
+}
+html[data-theme="dark"] .cp1431-installment-fields,
+html[data-theme="dark"] .cp1431-context-note,
+html[data-theme="dark"] .cp1431-impact-badge {
+    background: var(--cp141-surface-2);
+    border-color: var(--cp141-border);
+    color: var(--cp141-text);
+}
+html[data-theme="dark"] .cp1431-buy-baseline span,
+html[data-theme="dark"] .cp1431-buy-baseline small,
+html[data-theme="dark"] .cp1431-context-list span,
+html[data-theme="dark"] .cp1431-context-note p,
+html[data-theme="dark"] .cp1431-result-hero p,
+html[data-theme="dark"] .cp1431-result-conclusion > div > p,
+html[data-theme="dark"] .cp1431-result-note p,
+html[data-theme="dark"] .cp1431-comparison span,
+html[data-theme="dark"] .cp1431-cost-grid span,
+html[data-theme="dark"] .cp1431-percent-input > span {
+    color: var(--cp141-muted);
+}
+html[data-theme="dark"] .cp1431-context-list > div,
+html[data-theme="dark"] .cp1431-comparison > div,
+html[data-theme="dark"] .cp1431-cost-grid > div,
+html[data-theme="dark"] .cp1431-result-note {
+    border-color: var(--cp141-border);
+}
+@media (max-width: 1050px) {
+    .cp1431-buy-baseline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .cp1431-buy-layout {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 760px) {
+    .cp1431-buy-baseline,
+    .cp1431-result-grid {
+        grid-template-columns: 1fr;
+    }
+    .cp1431-result-hero,
+    .cp1431-result-conclusion {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .cp1431-impact-badge {
+        min-width: 0;
+        max-width: none;
+    }
+}

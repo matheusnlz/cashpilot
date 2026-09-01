@@ -1,0 +1,91 @@
+let graficoCategoriasAtual = null;
+
+function inicializarGraficoCategorias(dados) {
+
+         const canvas = document.getElementById('graficoCategorias');
+
+         if (!canvas)
+            return;
+
+         const paleta = ['#2F5D62', '#B5654A', '#7A6A53', '#3B6E71', '#5A6E5D', '#6B7280', '#8A7B5A', '#4B5563', '#7A3B3B', '#8A8A8A'];
+
+         if (graficoCategoriasAtual)
+            graficoCategoriasAtual.destroy();
+
+         if (!dados.length) {
+
+                    canvas.parentElement.innerHTML = '<p class="texto-vazio">Nenhum dado disponível neste período.</p>';
+
+                    return;
+
+    }
+
+         graficoCategoriasAtual = new Chart(canvas.getContext('2d'), {
+
+                 type: 'doughnut', data: {
+
+                         labels: dados.map(d => d.categoria), datasets: [ {
+
+                                 data: dados.map(d => d.total), backgroundColor: dados.map((_, i) => paleta[i % paleta.length]), borderWidth: 2, borderColor: '#FFFFFF'
+
+            }]
+
+        }, options: {
+
+                         responsive: true, maintainAspectRatio: false, plugins: {
+
+                                 legend: {
+
+                                         position: 'bottom', labels: {
+
+                                                 boxWidth: 10, font: {
+
+                                                         size: 11
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+function inicializarRelatorioAlternancia(gastos, entradas) {
+
+         const render = (dados) => {
+
+                 const box = document.getElementById('relDetalhes');
+
+                 if (!box)
+                    return;
+
+                 const total = dados.reduce((s, x) => s + Number(x.total || 0), 0);
+
+                 box.innerHTML = dados.map(d => {
+
+                         const pct = total > 0 ? (Number(d.total) / total * 100) : 0;
+              return `<div class="rel-linha"><div><strong>${d.categoria}</strong><span>${pct.toFixed(1)}%</span></div><div class="rel-barra"><i style="width:${pct}%"></i></div><small>R$ ${Number(d.total).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</small></div>`;
+
+        }).join('') || '<p class="texto-vazio">Nenhum dado disponível.</p>';
+
+    };
+
+         render(gastos);
+
+         document.querySelectorAll('.rel-tipo').forEach(btn => btn.addEventListener('click', () => {
+
+                 document.querySelectorAll('.rel-tipo').forEach(b => b.classList.remove('ativo'));
+          btn.classList.add('ativo');
+          const dados = btn.dataset.tipo === 'entradas' ? entradas : gastos;
+          inicializarGraficoCategorias(dados);
+          render(dados);
+
+    }));
+
+}

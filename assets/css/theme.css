@@ -1,0 +1,440 @@
+/* ============================================================
+   CashPilot 13.4.1 — Visual Consistency
+   Auditoria visual global: tema escuro, iconografia e controles.
+   ============================================================ */
+:root {
+    --cp141-bg: #f5f6f3;
+    --cp141-surface: #ffffff;
+    --cp141-surface-2: #f2f4f1;
+    --cp141-surface-3: #eaeeea;
+    --cp141-text: #202720;
+    --cp141-muted: #6d7771;
+    --cp141-subtle: #8b948f;
+    --cp141-border: #dde3de;
+    --cp141-border-strong: #cbd3cd;
+    --cp141-accent: #315e59;
+    --cp141-accent-hover: #294f4b;
+    --cp141-accent-soft: #e5eeeb;
+    --cp141-success: #477858;
+    --cp141-success-soft: #e8f1ea;
+    --cp141-danger: #a5534d;
+    --cp141-danger-soft: #f6eae8;
+    --cp141-warning: #9c733b;
+    --cp141-warning-soft: #f5eee2;
+    --cp141-radius-input: 10px;
+    --cp141-radius-card: 14px;
+    --cp141-radius-modal: 16px;
+}
+html[data-theme="dark"] {
+    --cp141-bg: #0f1210;
+    --cp141-surface: #171c19;
+    --cp141-surface-2: #1c221e;
+    --cp141-surface-3: #222923;
+    --cp141-text: #f0f3f1;
+    --cp141-muted: #a8b1ac;
+    --cp141-subtle: #7f8983;
+    --cp141-border: #2c3530;
+    --cp141-border-strong: #3a443e;
+    --cp141-accent: #78a79d;
+    --cp141-accent-hover: #8ab9af;
+    --cp141-accent-soft: #20302a;
+    --cp141-success: #84b993;
+    --cp141-success-soft: #1c2a20;
+    --cp141-danger: #df8982;
+    --cp141-danger-soft: #2b1e1d;
+    --cp141-warning: #d2aa6d;
+    --cp141-warning-soft: #2c261c;
+    --cp-bg: var(--cp141-bg);
+    --cp-surface: var(--cp141-surface);
+    --cp-surface-2: var(--cp141-surface-2);
+    --cp-text: var(--cp141-text);
+    --cp-muted: var(--cp141-muted);
+    --cp-border: var(--cp141-border);
+    --cp-primary: var(--cp141-accent);
+    --cp-primary-soft: var(--cp141-accent-soft);
+    --cor-fundo: var(--cp141-bg);
+    --cor-superficie: var(--cp141-surface);
+    --cor-texto: var(--cp141-text);
+    --cor-texto-suave: var(--cp141-muted);
+    --cor-borda: var(--cp141-border);
+    --cor-destaque: var(--cp141-accent);
+    --cor-destaque-suave: var(--cp141-accent-soft);
+}
+/* SVGs: linguagem visual única e sóbria */
+.cp-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+    flex: 0 0 auto;
+    stroke-width: 1.8;
+}
+.menu-icone .cp-icon {
+    width: 17px;
+    height: 17px;
+}
+.menu-item.ativo .cp-icon {
+    stroke-width: 2;
+}
+/* Empty states sem caracteres tipográficos improvisados */
+.estado-vazio.clean-empty .cp-empty-icon {
+    display: grid !important;
+    place-items: center;
+}
+.estado-vazio.clean-empty .cp-empty-icon .cp-icon {
+    width: 21px;
+    height: 21px;
+}
+/* Entradas / saídas / transferências */
+.transacao-icone,
+.movimentacao-icone,
+.cp-flow-icon {
+    font-size: 0 !important;
+}
+.transacao-icone::before,
+.movimentacao-icone::before,
+.cp-flow-icon::before {
+    width: 17px;
+    height: 17px;
+    display: block;
+    content: "";
+    background: currentColor;
+    -webkit-mask: var(--cp-flow-mask) center / contain no-repeat;
+    mask: var(--cp-flow-mask) center / contain no-repeat;
+}
+.transacao-icone.receita,
+.transacao-icone.entrada,
+.movimentacao-icone.receita,
+.movimentacao-icone.entrada,
+.cp-flow-icon.entrada {
+    --cp-flow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 7 7 17'/%3E%3Cpath d='M17 17H7V7'/%3E%3C/svg%3E");
+    color: var(--cp141-success) !important;
+    background: var(--cp141-success-soft) !important;
+}
+.transacao-icone.despesa,
+.transacao-icone.saida,
+.movimentacao-icone.despesa,
+.movimentacao-icone.saida,
+.cp-flow-icon.saida {
+    --cp-flow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
+    color: var(--cp141-danger) !important;
+    background: var(--cp141-danger-soft) !important;
+}
+.transacao-icone.transferencia,
+.movimentacao-icone.transferencia,
+.cp-flow-icon.transferencia {
+    --cp-flow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3 4 7l4 4'/%3E%3Cpath d='M4 7h16'/%3E%3Cpath d='m16 21 4-4-4-4'/%3E%3Cpath d='M20 17H4'/%3E%3C/svg%3E");
+    color: var(--cp141-accent) !important;
+    background: var(--cp141-accent-soft) !important;
+}
+/* Dark mode: superfícies — nenhuma caixa branca perdida */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .conteudo,
+html[data-theme="dark"] .conteudo-inner {
+    background: var(--cp141-bg) !important;
+    color: var(--cp141-text) !important;
+}
+html[data-theme="dark"] :is(
+    .surface-card, .data-panel, .cartao, .calendar-panel,
+    .metric-clean, .hero-balance, .business-kpis article,
+    .catalog-card, .supplier-card, .person-card, .learning-card,
+    .cp-drawer, .profile-account-panel, .profile-settings-section,
+    .profile-identity-card, .profile-readonly-row, .profile-email-current,
+    .check-card, .business-hub-card, .import-review, .import-how,
+    .financing-card, .goal-card, .budget-card, .recurrence-card,
+    .action-plan-card, .copiloto-widget, .copiloto-chat-panel
+) {
+    background: var(--cp141-surface) !important;
+    color: var(--cp141-text) !important;
+    border-color: var(--cp141-border) !important;
+    box-shadow: none !important;
+}
+html[data-theme="dark"] :is(
+    .summary-strip > div, .catalog-metrics span, .supplier-data span,
+    .person-info > div, .profile-facts > span, .date-chip,
+    .sale-total-box > div, .sale-builder-item, .profile-email-action,
+    .inline-new-category, .upload-zone, .table-head
+) {
+    background: var(--cp141-surface-2) !important;
+    color: var(--cp141-text) !important;
+    border-color: var(--cp141-border) !important;
+}
+/* Registrar venda: resumo legível e profissional nos dois temas */
+.sale-total-box {
+    gap: 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+}
+.sale-total-box > div {
+    min-width: 0;
+    padding: 12px 13px !important;
+    border: 1px solid var(--cp141-border) !important;
+    border-radius: 11px;
+    background: var(--cp141-surface) !important;
+}
+.sale-total-box span {
+    color: var(--cp141-muted) !important;
+    font-size: 9px !important;
+    font-weight: 650;
+}
+.sale-total-box strong {
+    color: var(--cp141-text) !important;
+    font-size: 12.5px !important;
+    font-weight: 700;
+}
+html[data-theme="dark"] .sale-builder {
+    background: var(--cp141-surface) !important;
+    border-color: var(--cp141-border) !important;
+}
+html[data-theme="dark"] .sale-builder-item {
+    background: var(--cp141-surface) !important;
+}
+html[data-theme="dark"] .sale-builder-item:hover {
+    background: var(--cp141-surface-2) !important;
+}
+html[data-theme="dark"] .qtd-control button {
+    background: var(--cp141-surface-2) !important;
+    color: var(--cp141-text) !important;
+    border-color: var(--cp141-border) !important;
+}
+html[data-theme="dark"] .qtd-control input {
+    background: var(--cp141-surface-3) !important;
+    color: var(--cp141-text) !important;
+    border-color: var(--cp141-border) !important;
+}
+/* Formulários globais */
+html[data-theme="dark"] :is(input, select, textarea, .money-input, .username-input-wrap) {
+    background: var(--cp141-surface-2) !important;
+    color: var(--cp141-text) !important;
+    border-color: var(--cp141-border-strong) !important;
+    box-shadow: none !important;
+}
+html[data-theme="dark"] :is(input, select, textarea):focus {
+    border-color: var(--cp141-accent) !important;
+    box-shadow: 0 0 0 3px rgba(120,167,157,.09) !important;
+}
+html[data-theme="dark"] :is(input, textarea)::placeholder {
+    color: var(--cp141-subtle) !important;
+}
+html[data-theme="dark"] select option {
+    background: var(--cp141-surface-2);
+    color: var(--cp141-text);
+}
+/* Tabelas/listas */
+html[data-theme="dark"] :is(.table-row, .transacao-linha, .history-item, .responsive-list) {
+    border-color: var(--cp141-border) !important;
+}
+html[data-theme="dark"] .table-row:not(.table-head):hover {
+    background: var(--cp141-surface-2) !important;
+}
+html[data-theme="dark"] :is(.table-head, .data-panel-head) {
+    color: var(--cp141-muted) !important;
+}
+/* Perfil */
+html[data-theme="dark"] .profile-tabs {
+    background: var(--cp141-surface-2) !important;
+    border-color: var(--cp141-border) !important;
+}
+html[data-theme="dark"] .profile-tabs a {
+    color: var(--cp141-muted) !important;
+}
+html[data-theme="dark"] .profile-tabs a:hover {
+    background: var(--cp141-surface-3) !important;
+    color: var(--cp141-text) !important;
+}
+html[data-theme="dark"] .profile-tabs a.ativo {
+    background: var(--cp141-accent-soft) !important;
+    color: var(--cp141-accent) !important;
+}
+/* Feedback, badges e estados */
+html[data-theme="dark"] .alerta-mensagem.sucesso,
+html[data-theme="dark"] .cp-toast.sucesso {
+    background: var(--cp141-success-soft) !important;
+    color: var(--cp141-success) !important;
+    border-color: #2d4935 !important;
+}
+html[data-theme="dark"] .alerta-mensagem.erro,
+html[data-theme="dark"] .cp-toast.erro {
+    background: var(--cp141-danger-soft) !important;
+    color: var(--cp141-danger) !important;
+    border-color: #4a2d2a !important;
+}
+html[data-theme="dark"] .alerta-mensagem.aviso {
+    background: var(--cp141-warning-soft) !important;
+    color: var(--cp141-warning) !important;
+    border-color: #4a3b25 !important;
+}
+/* Botões */
+html[data-theme="dark"] .btn-secundario {
+    background: var(--cp141-surface-2) !important;
+    color: var(--cp141-text) !important;
+    border-color: var(--cp141-border-strong) !important;
+}
+html[data-theme="dark"] .btn-secundario:hover {
+    background: var(--cp141-surface-3) !important;
+}
+html[data-theme="dark"] :is(.row-actions button, .row-actions a, .catalog-actions button, .catalog-actions a) {
+    color: var(--cp141-muted) !important;
+    border-color: var(--cp141-border) !important;
+    background: transparent !important;
+}
+html[data-theme="dark"] :is(.row-actions button, .row-actions a, .catalog-actions button, .catalog-actions a):hover {
+    color: var(--cp141-text) !important;
+    background: var(--cp141-surface-2) !important;
+}
+/* Modal, dropdown, drawer */
+html[data-theme="dark"] :is(
+    .cp-confirm-modal, .cp-confirm-overlay .cp-confirm-modal,
+    .dropdown-menu, .menu-contexto, .drawer-head, .drawer-body
+) {
+    background: var(--cp141-surface) !important;
+    color: var(--cp141-text) !important;
+    border-color: var(--cp141-border) !important;
+}
+html[data-theme="dark"] .drawer-close {
+    color: var(--cp141-muted) !important;
+}
+html[data-theme="dark"] .drawer-close:hover {
+    background: var(--cp141-surface-2) !important;
+    color: var(--cp141-text) !important;
+}
+/* Gráficos e textos auxiliares */
+html[data-theme="dark"] :is(
+    .secao-ajuda, .page-head p, .topo-pagina p, .data-panel-head p,
+    .sale-builder-item small, .summary-strip small, .metric-clean small,
+    .business-kpis small, .profile-list-facts span
+) {
+    color: var(--cp141-muted) !important;
+}
+/* Scrollbar discreta */
+html[data-theme="dark"] * {
+    scrollbar-color: #3a443e transparent;
+}
+html[data-theme="dark"] *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+html[data-theme="dark"] *::-webkit-scrollbar-track {
+    background: transparent;
+}
+html[data-theme="dark"] *::-webkit-scrollbar-thumb {
+    background: #3a443e;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 999px;
+}
+html[data-theme="dark"] *::-webkit-scrollbar-thumb:hover {
+    background: #4a554e;
+}
+/* Login Google: G alinhado sem deslocar o texto */
+.cp-google-placeholder {
+    position: relative;
+    display: grid !important;
+    grid-template-columns: 24px 1fr 24px;
+    align-items: center;
+    gap: 10px;
+    width: min(330px, 100%) !important;
+    min-height: 44px;
+    padding: 0 12px !important;
+    border: 1px solid #747775 !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: #1f1f1f !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 20px;
+    text-align: center;
+}
+.cp-google-placeholder .cp-google-icon {
+    grid-column: 1;
+    width: 18px !important;
+    height: 18px !important;
+    justify-self: center;
+}
+.cp-google-placeholder .cp-google-label {
+    grid-column: 2;
+    justify-self: center;
+}
+.cp-google-placeholder::after {
+    content: "";
+    grid-column: 3;
+}
+.cp-google-area .g_id_signin {
+    width: min(330px, 100%);
+    display: flex;
+    justify-content: center;
+}
+/* Olho de senha: SVG tradicional, sem cápsula/efeito chamativo */
+.auth-password-toggle {
+    width: 36px !important;
+    height: 36px !important;
+    border: 0 !important;
+    border-radius: 7px !important;
+    background: transparent !important;
+    color: #747b77 !important;
+}
+.auth-password-toggle:hover {
+    background: transparent !important;
+    color: #303733 !important;
+}
+.auth-password-toggle .cp-eye {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.auth-password-toggle .cp-eye-off {
+    display: none;
+}
+.auth-password-toggle.ativo .cp-eye-open {
+    display: none;
+}
+.auth-password-toggle.ativo .cp-eye-off {
+    display: block;
+}
+/* Login/cadastro/transições continuam SEMPRE claros */
+html[data-theme="dark"] body.cp-auth-light,
+body.cp-auth-light {
+    background: #f4f5f2 !important;
+    color: #202720 !important;
+}
+body.cp-auth-light :is(.auth-transition-card, .auth-transition-form, .auth-caixa) {
+    color: #202720 !important;
+}
+body.cp-auth-light :is(input, select, textarea, .auth-input-wrap) {
+    background: #fff !important;
+    color: #202720 !important;
+    border-color: #d9dfda !important;
+}
+/* Menos "cara de IA": sombras e hovers discretos */
+.surface-card,
+.data-panel,
+.metric-clean,
+.business-kpis article,
+.catalog-card,
+.supplier-card,
+.person-card,
+.action-plan-card {
+    box-shadow: none !important;
+}
+.surface-card:hover,
+.catalog-card:hover,
+.supplier-card:hover,
+.person-card:hover,
+.action-plan-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+/* Responsividade preventiva */
+@media (max-width: 720px) {
+    .sale-total-box {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    .cp-google-placeholder {
+        width: 100% !important;
+    }
+}
