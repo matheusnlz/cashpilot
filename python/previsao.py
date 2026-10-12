@@ -34,14 +34,14 @@ def ritmo_medio_economia(cursor, usuario_id: int) -> float:
 
         cursor.execute(
             "SELECT COALESCE(SUM(valor), 0) AS total FROM receitas "
-            "WHERE usuario_id = %s AND data_receita BETWEEN %s AND %s",
+            "WHERE usuario_id = %s AND data_receita BETWEEN %s AND %s AND status='efetivado' AND data_receita <= CURRENT_DATE()",
             (usuario_id, inicio, fim),
         )
         receitas = float(cursor.fetchone()["total"])
 
         cursor.execute(
             "SELECT COALESCE(SUM(valor), 0) AS total FROM despesas "
-            "WHERE usuario_id = %s AND data_despesa BETWEEN %s AND %s",
+            "WHERE usuario_id = %s AND data_despesa BETWEEN %s AND %s AND status='efetivado' AND data_despesa <= CURRENT_DATE()",
             (usuario_id, inicio, fim),
         )
         despesas = float(cursor.fetchone()["total"])

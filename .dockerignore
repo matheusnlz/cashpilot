@@ -10,3 +10,16 @@ __pycache__
 *.old
 uploads/avatars/*
 !uploads/avatars/.gitkeep
+
+# Artefatos sem necessidade em runtime
+*.md
+includes/pluggy_config.php
+includes/segredos.php
+secrets.php
+includes/groq_config.php
+includes/email_config.php
+includes/oauth_config.php
+includes/openai_config.php
+database/*.sql
+database/migrations/
+database/seeds/

@@ -1,0 +1,1235 @@
+/* ============================================================
+   CashPilot 16.3.1 — responsividade, consistência visual e ícones
+   Camada final, sem alterações nas regras de negócio.
+   ============================================================ */
+
+:root {
+    --cp163-touch-target: 42px;
+    --cp163-mobile-gap: 12px;
+}
+
+/* Linguagem de ícones da 16.3.1: SVG local, sem fonte ou CDN externa. */
+.cp-icon {
+    overflow: visible;
+    vector-effect: non-scaling-stroke;
+}
+
+.cp-icon-inline {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    display: inline-block;
+    vertical-align: -0.18em;
+}
+
+.btn:has(.cp-icon-inline),
+.text-button:has(.cp-icon-inline) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+.menu-icone .cp-icon,
+.cp-mobile-subnav-links .cp-icon {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.85;
+}
+
+.menu-item.ativo .menu-icone .cp-icon,
+.cp-mobile-subnav-links a.ativo .cp-icon {
+    stroke-width: 2;
+}
+
+.cp15-mobile-copiloto .cp-icon {
+    width: 23px;
+    height: 23px;
+}
+
+.cp-mobile-subnav-close .cp-icon,
+.sidebar-mobile-close .cp-icon,
+.drawer-close .cp-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.pagination-clean .cp-icon,
+.paginacao .cp-icon,
+.calendar-head .cp-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.cp152-copiloto-symbol .cp-icon,
+.cp152-welcome-mark .cp-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.cp152-message-avatar .cp-icon,
+.cp152-history-icon .cp-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.cp152-history-empty .cp-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.cp152-history-new {
+    display: flex !important;
+    align-items: center;
+    gap: 7px;
+}
+
+.cp152-history-new .cp-icon,
+.cp152-new-chat .cp-icon,
+.cp152-history-head button .cp-icon,
+.cp152-history-item button .cp-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.copiloto-botao .cp-icon,
+.copiloto-avatar .cp-icon,
+.copiloto-widget-contexto .cp-icon,
+.copiloto-context-ready .cp-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.copiloto-widget-actions .cp-icon,
+.copiloto-widget-form button .cp-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.first-visit-icon .cp-icon,
+.meta-contato-icone .cp-icon,
+.copiloto-mini-avatar .cp-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.auth-input-icon svg {
+    width: 17px;
+    height: 17px;
+    display: block;
+}
+
+/* Impede que grids, textos longos, gráficos e formulários ultrapassem a tela. */
+.conteudo-inner,
+.conteudo-inner > *,
+.surface-card,
+.cartao,
+.data-panel,
+.calendar-panel,
+.dashboard-grid-main > *,
+.dashboard-grid-secondary > *,
+.grade-dupla > *,
+.form-linha > *,
+.form-grid > *,
+.cp14-kpi-grid > *,
+.cp153-of-summary > *,
+.rel145-grid > * {
+    min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+canvas {
+    display: block;
+}
+
+.surface-card,
+.cartao,
+.data-panel,
+.calendar-panel,
+.message-bubble,
+.cp153-alert,
+.alerta-mensagem {
+    overflow-wrap: break-word;
+}
+
+.page-head h1,
+.topo-pagina h1,
+.section-title h2,
+.surface-card h2,
+.surface-card h3,
+.cartao h2,
+.cartao h3 {
+    text-wrap: balance;
+}
+
+/* Controles compartilhados. */
+.pagination-clean,
+.paginacao,
+.paginacao-importacao {
+    max-width: 100%;
+}
+
+.pagination-clean a,
+.pagination-clean span,
+.paginacao a,
+.paginacao button,
+.paginacao-importacao .btn {
+    min-height: var(--cp163-touch-target);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-clean a,
+.paginacao a,
+.paginacao button,
+.paginacao-importacao .btn,
+.periodos-grafico button,
+.view-toggle a,
+.calendar-head > a {
+    background: var(--cp141-surface);
+    color: var(--cp141-text);
+    border-color: var(--cp141-border);
+}
+
+.pagination-clean a:hover,
+.paginacao a:hover,
+.paginacao button:hover,
+.paginacao-importacao .btn:hover,
+.periodos-grafico button:hover,
+.view-toggle a:hover,
+.calendar-head > a:hover {
+    background: var(--cp141-surface-2);
+    border-color: var(--cp141-accent);
+}
+
+.pagination-clean a.ativo,
+.paginacao a.ativo,
+.periodos-grafico button.ativo,
+.view-toggle a.ativo {
+    background: var(--cp141-accent-soft);
+    color: var(--cp141-accent);
+    border-color: var(--cp141-accent);
+}
+
+.pagination-clean a:focus-visible,
+.paginacao a:focus-visible,
+.paginacao button:focus-visible,
+.paginacao-importacao .btn:focus-visible,
+.filter-bar :is(input, select, button, a):focus-visible,
+.row-actions :is(a, button):focus-visible,
+.catalog-actions :is(a, button):focus-visible,
+.topo-acoes :is(a, button):focus-visible {
+    outline: 2px solid var(--cp141-accent);
+    outline-offset: 3px;
+}
+
+.paginacao-importacao .btn:disabled,
+.pagination-clean [aria-disabled='true'] {
+    background: var(--cp141-surface-2);
+    color: var(--cp141-muted);
+    border-color: var(--cp141-border);
+    opacity: 0.72;
+}
+
+.cp163-status-success {
+    background: var(--cp141-success-soft) !important;
+    color: var(--cp141-success) !important;
+}
+
+.cp163-status-danger {
+    background: var(--cp141-danger-soft) !important;
+    color: var(--cp141-danger) !important;
+}
+
+.cp163-category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.cp163-category-row > * {
+    min-width: 0;
+}
+
+.cp163-category-main {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cp163-category-row .categoria-limite-form {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.cp163-category-row .categoria-limite-form input {
+    min-width: 150px;
+}
+
+.cp163-delete-link {
+    padding: 8px;
+    border: 0;
+    background: none;
+    color: var(--cp141-danger);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Tabelas continuam completas e ganham rolagem apenas no próprio bloco. */
+.tabela-responsiva,
+.surface-card:has(> table),
+.surface-card:has(> .tabela-responsiva),
+.cartao:has(> table),
+.cartao:has(> .tabela-responsiva),
+.data-panel:has(> table) {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+/* Formulários e ações não devem manter larguras de desktop à força. */
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}
+
+input[type='date'],
+input[type='month'],
+input[type='number'],
+select {
+    min-height: var(--cp163-touch-target);
+}
+
+.row-actions,
+.catalog-actions,
+.person-actions,
+.finance-saved-actions,
+.cp14-investment-actions,
+.cp153-institution-actions,
+.profile-avatar-actions,
+.profile-email-action,
+.inline-actions,
+.topo-acoes {
+    flex-wrap: wrap;
+}
+
+.cp-drawer,
+.modal,
+.modal-conteudo,
+.confirm-dialog {
+    max-width: min(100%, 680px);
+}
+
+/* O tema escuro deve alcançar controles que ainda recebiam fundo claro. */
+html[data-theme='dark'] {
+    color-scheme: dark;
+}
+
+html[data-theme='dark'] .cp-auth-light {
+    color-scheme: light;
+}
+
+html[data-theme='dark']
+    :is(
+        .pagination-clean a,
+        .paginacao a,
+        .paginacao button,
+        .paginacao-importacao .btn,
+        .periodos-grafico button,
+        .view-toggle,
+        .view-toggle a,
+        .calendar-head > a,
+        .filter-clear,
+        .filter-search,
+        .row-actions a,
+        .row-actions button
+    ) {
+    background: var(--cp141-surface-2);
+    color: var(--cp141-text);
+    border-color: var(--cp141-border);
+}
+
+html[data-theme='dark']
+    :is(
+        .pagination-clean a.ativo,
+        .paginacao a.ativo,
+        .periodos-grafico button.ativo,
+        .view-toggle a.ativo
+    ) {
+    background: var(--cp141-accent-soft);
+    color: var(--cp141-accent);
+    border-color: var(--cp141-accent);
+}
+
+html[data-theme='dark']
+    :is(
+        .pagination-clean a:hover,
+        .paginacao a:hover,
+        .paginacao button:hover,
+        .paginacao-importacao .btn:hover,
+        .periodos-grafico button:hover,
+        .view-toggle a:hover,
+        .calendar-head > a:hover,
+        .row-actions a:hover,
+        .row-actions button:hover
+    ) {
+    background: var(--cp141-surface-3);
+}
+
+html[data-theme='dark']
+    :is(
+        .filter-bar,
+        .import-review-card,
+        .import-review-summary,
+        .cp153-institution-card,
+        .finance-saved-card,
+        .recorrencia-item,
+        .radar-pagina,
+        .action-plan-card
+    ) {
+    color: var(--cp141-text);
+    border-color: var(--cp141-border);
+}
+
+html[data-theme='dark'] tbody tr:hover {
+    background: var(--cp141-surface-2);
+}
+
+html[data-theme='dark'] :is(input, select, textarea):disabled {
+    color: var(--cp141-muted);
+    background: var(--cp141-surface-2);
+    border-color: var(--cp141-border);
+    opacity: 0.82;
+}
+
+html[data-theme='dark'] .cp163-status-success {
+    background: var(--cp141-success-soft) !important;
+    color: var(--cp141-success) !important;
+}
+
+html[data-theme='dark'] .cp163-status-danger {
+    background: var(--cp141-danger-soft) !important;
+    color: var(--cp141-danger) !important;
+}
+
+/* Tablets e notebooks compactos. */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .conteudo-inner {
+        padding-inline: clamp(18px, 3vw, 28px) !important;
+    }
+
+    .cp14-kpi-grid,
+    .cp153-of-summary,
+    .rel145-kpis,
+    .business-kpis,
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .cp14-investment-layout,
+    .cp14-planning-layout,
+    .cp14-cash-layout,
+    .cp1431-buy-layout,
+    .cp154-bank-explainer,
+    .profile-main-grid,
+    .import-clean-layout {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .cp-drawer {
+        width: min(560px, 76vw) !important;
+    }
+}
+
+/* Importação e conexão bancária: conteúdo longo não deve alargar a página. */
+.import-clean-layout > *,
+.import-clean-layout .form-grupo,
+.cp153-open-finance .surface-card {
+    min-width: 0;
+}
+
+.import-clean-layout .upload-zone,
+.import-clean-layout .secao-ajuda,
+.cp153-open-finance .cp153-alert {
+    overflow-wrap: anywhere;
+}
+
+.import-clean-layout :is(input, select, button) {
+    max-width: 100%;
+}
+
+/* Smartphones. */
+@media (max-width: 767px) {
+    :root {
+        --cp163-touch-target: 44px;
+    }
+
+    .conteudo-inner {
+        padding-inline: max(14px, env(safe-area-inset-left)) !important;
+    }
+
+    .page-head,
+    .topo-pagina,
+    .section-title,
+    .data-panel-head,
+    .import-review-head,
+    .cp153-of-head,
+    .rel145-topo {
+        width: 100%;
+        align-items: stretch !important;
+    }
+
+    .page-head,
+    .topo-pagina,
+    .import-review-head,
+    .cp153-of-head,
+    .rel145-topo {
+        flex-direction: column !important;
+    }
+
+    .page-head > div,
+    .topo-pagina > div,
+    .section-title > div,
+    .data-panel-head > div,
+    .import-review-head > div,
+    .cp153-of-head > div,
+    .rel145-topo > div {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .page-head > :is(.btn, a, button),
+    .topo-pagina > :is(.btn, a, button),
+    .import-review-head > :is(.btn, a, button),
+    .cp153-of-head > :is(.btn, a, button),
+    .rel145-topo > :is(.btn, a, button) {
+        width: 100% !important;
+    }
+
+    .cp14-head-actions,
+    .topo-acoes,
+    .welcome-actions,
+    .cadastro-acoes,
+    .profile-avatar-actions,
+    .profile-email-action,
+    .import-review-actions,
+    .finance-saved-actions,
+    .cp153-institution-actions,
+    .sim-acoes,
+    .inline-actions {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    .cp14-head-actions > *,
+    .topo-acoes > *,
+    .welcome-actions > *,
+    .cadastro-acoes > *,
+    .profile-avatar-actions > *,
+    .profile-email-action > *,
+    .import-review-actions > *,
+    .finance-saved-actions > *,
+    .cp153-institution-actions > *,
+    .sim-acoes > *,
+    .inline-actions > * {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .filter-bar,
+    .learning-filters,
+    .radar-filtros,
+    .rel145-filtros {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 9px !important;
+    }
+
+    .filter-bar > *,
+    .learning-filters > *,
+    .radar-filtros > *,
+    .rel145-filtros > * {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+    }
+
+    .cp163-category-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .cp163-category-row .categoria-limite-form {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .cp163-category-row .categoria-limite-form input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cp163-category-row form:not(.categoria-limite-form) {
+        align-self: flex-start;
+    }
+
+    .grade-dupla,
+    .form-linha,
+    .form-grid,
+    .dashboard-grid-main,
+    .dashboard-grid-secondary,
+    .cp14-kpi-grid,
+    .cp153-of-summary,
+    .rel145-kpis,
+    .rel145-grid,
+    .business-kpis,
+    .business-hub-clean,
+    .cp15-privacy-grid,
+    .cp15-admin-grid,
+    .cp152-learning-summary,
+    .learning-grid,
+    .finance-saved-grid,
+    .cp143-status-grid,
+    .cp143-insight-grid,
+    .cp1431-buy-baseline,
+    .cp152-sim-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .surface-card,
+    .cartao,
+    .data-panel,
+    .calendar-panel {
+        max-width: 100%;
+    }
+
+    .pagination-clean,
+    .paginacao,
+    .paginacao-importacao {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .pagination-clean a,
+    .paginacao a,
+    .paginacao button {
+        min-width: var(--cp163-touch-target);
+    }
+
+    .paginacao-importacao .btn {
+        flex: 1 1 120px;
+    }
+
+    .row-actions,
+    .catalog-actions,
+    .person-actions,
+    .recorrencia-acoes,
+    .radar-alerta-acoes {
+        gap: 8px !important;
+    }
+
+    .cp-drawer,
+    .modal,
+    .modal-conteudo,
+    .confirm-dialog {
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+        max-height: calc(100dvh - 20px);
+        margin: 10px !important;
+        border-radius: 16px !important;
+    }
+
+    .cp-drawer {
+        inset: auto 0 0 0 !important;
+        overflow-y: auto;
+    }
+
+    .chart-wrap,
+    .chart-container,
+    .cp14-cash-chart,
+    .rel145-chart {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .chart-wrap canvas,
+    .chart-container canvas,
+    .cp14-cash-chart canvas,
+    .rel145-chart canvas {
+        width: 100% !important;
+    }
+
+    .cp153-bank-steps {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+}
+
+@media (max-width: 390px) {
+    .conteudo-inner {
+        padding-inline: 11px !important;
+    }
+
+    .surface-card,
+    .cartao,
+    .data-panel,
+    .calendar-panel {
+        padding: 13px !important;
+        border-radius: 13px !important;
+    }
+
+    .page-head h1,
+    .topo-pagina h1 {
+        font-size: clamp(23px, 7vw, 28px) !important;
+    }
+
+    .pagination-clean a,
+    .paginacao a,
+    .paginacao button {
+        min-width: 42px;
+        min-height: 42px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   CashPilot 16.3.1 — página dedicada do Copiloto
+   Mantém o chat dentro da área útil em desktop, tablet e mobile.
+   ============================================================ */
+.cp1631-copiloto-body {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden !important;
+}
+
+.cp1631-copiloto-body .layout {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cp1631-copiloto-body .conteudo {
+    min-height: 0 !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden !important;
+}
+
+.cp1631-copiloto-body .cp15-admin-mode-banner {
+    flex: 0 0 auto;
+}
+
+.cp1631-copiloto-body .conteudo-inner {
+    width: min(1500px, calc(100% - 36px)) !important;
+    max-width: 1500px !important;
+    min-height: 0;
+    flex: 1 1 auto;
+    display: flex;
+    padding: 18px 0 !important;
+}
+
+.cp1631-copiloto-body .cp152-copiloto-page {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+    border-radius: 18px;
+}
+
+.cp1631-copiloto-body .cp152-copiloto-topbar,
+.cp1631-copiloto-body .cp152-chat-panel,
+.cp1631-copiloto-body .cp152-chat-messages,
+.cp1631-copiloto-body .cp152-chat-footer,
+.cp1631-copiloto-body .cp152-history {
+    min-width: 0;
+}
+
+.cp1631-copiloto-body .cp152-chat-messages {
+    overscroll-behavior: contain;
+}
+
+.cp1631-copiloto-body .cp152-message-content,
+.cp1631-copiloto-body .cp152-message-content :is(p, li, code, a),
+.cp1631-copiloto-body .cp152-history-item strong {
+    overflow-wrap: anywhere;
+}
+
+.cp1631-copiloto-body .cp152-followups {
+    padding-bottom: 2px;
+    overscroll-behavior-inline: contain;
+}
+
+.cp1631-copiloto-body .cp152-composer textarea {
+    min-width: 0;
+}
+
+@media (max-height: 760px) and (min-width: 768px) {
+    .cp1631-copiloto-body .cp152-copiloto-topbar {
+        min-height: 58px;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-messages {
+        padding-top: 22px;
+        padding-bottom: 18px;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-welcome {
+        margin-top: 16px;
+    }
+
+    .cp1631-copiloto-body .cp152-welcome-mark {
+        width: 46px;
+        height: 46px;
+        margin-bottom: 12px;
+    }
+
+    .cp1631-copiloto-body .cp152-starter-grid button {
+        min-height: 72px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .cp1631-copiloto-body .conteudo-inner {
+        width: calc(100% - 32px) !important;
+        padding: 16px 0 !important;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-messages {
+        padding-inline: clamp(20px, 5vw, 56px);
+    }
+
+    .cp1631-copiloto-body .cp152-chat-footer {
+        padding-inline: clamp(20px, 5vw, 56px);
+    }
+}
+
+@media (max-width: 767px) {
+    .cp1631-copiloto-body {
+        padding-bottom: calc(
+            var(--cp-mobile-nav-height) + var(--cp-mobile-safe-bottom)
+        );
+    }
+
+    .cp1631-copiloto-body .layout {
+        height: calc(
+            100dvh - 54px - var(--cp-mobile-nav-height) - var(--cp-mobile-safe-bottom)
+        );
+    }
+
+    .cp1631-copiloto-body .conteudo {
+        height: 100%;
+        padding-bottom: 0 !important;
+    }
+
+    .cp1631-copiloto-body .conteudo-inner {
+        width: 100% !important;
+        height: 100%;
+        padding: 8px 10px !important;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-page {
+        width: 100%;
+        height: 100% !important;
+        min-height: 0;
+        margin: 0;
+        border: 1px solid var(--cp141-border);
+        border-radius: 15px;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-topbar {
+        min-height: 54px;
+        padding: 7px 9px;
+        gap: 8px;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-brand {
+        gap: 7px;
+    }
+
+    .cp1631-copiloto-body .cp152-history-toggle,
+    .cp1631-copiloto-body .cp152-new-chat {
+        width: 40px;
+        height: 40px;
+        min-height: 40px;
+        flex: 0 0 40px;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-symbol {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-brand > div:last-child {
+        min-width: 0;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-brand strong {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-messages {
+        padding: 16px 12px 18px;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-welcome {
+        width: 100%;
+        margin: clamp(18px, 5vh, 42px) auto 0;
+        padding: 0;
+    }
+
+    .cp1631-copiloto-body .cp152-welcome-mark {
+        width: 46px;
+        height: 46px;
+        margin-bottom: 12px;
+        border-radius: 14px;
+        font-size: 20px;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-welcome h1 {
+        font-size: clamp(23px, 7vw, 29px);
+        line-height: 1.12;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-welcome > p {
+        margin: 9px auto 16px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .cp1631-copiloto-body .cp152-starter-grid {
+        width: 100%;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    .cp1631-copiloto-body .cp152-starter-grid button {
+        width: 100%;
+        min-height: 58px;
+        padding: 11px 13px;
+        border-radius: 13px;
+    }
+
+    .cp1631-copiloto-body .cp152-starter-grid strong {
+        margin-top: 2px;
+        font-size: 12px;
+    }
+
+    .cp1631-copiloto-body .cp152-starter-grid small {
+        margin-top: 2px;
+    }
+
+    .cp1631-copiloto-body .cp152-message {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 18px;
+        gap: 8px;
+    }
+
+    .cp1631-copiloto-body .cp152-message-avatar {
+        width: 28px;
+        height: 28px;
+        flex-basis: 28px;
+    }
+
+    .cp1631-copiloto-body .cp152-message-content {
+        max-width: calc(100% - 36px);
+    }
+
+    .cp1631-copiloto-body .cp152-message.user .cp152-message-content {
+        max-width: 88%;
+    }
+
+    .cp1631-copiloto-body .cp152-thinking {
+        width: 100%;
+        padding: 0 12px 6px;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-footer {
+        width: 100%;
+        padding: 7px 9px 8px;
+    }
+
+    .cp1631-copiloto-body .cp152-followups {
+        width: 100%;
+    }
+
+    .cp1631-copiloto-body .cp152-composer {
+        width: 100%;
+        min-height: 48px;
+        padding: 4px 4px 4px 13px;
+    }
+
+    .cp1631-copiloto-body .cp152-composer textarea {
+        min-height: 38px;
+        padding-block: 8px 6px;
+    }
+
+    .cp1631-copiloto-body .cp152-send {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .cp1631-copiloto-body .cp152-history {
+        width: min(320px, calc(100vw - 34px));
+        max-width: calc(100% - 24px) !important;
+    }
+}
+
+@media (max-width: 390px) {
+    .cp1631-copiloto-body .conteudo-inner {
+        padding: 6px 7px !important;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-page {
+        border-radius: 13px;
+    }
+
+    .cp1631-copiloto-body .cp152-copiloto-symbol {
+        display: none;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-messages {
+        padding-inline: 10px;
+    }
+
+    .cp1631-copiloto-body .cp152-chat-footer {
+        padding-inline: 7px;
+    }
+}
+
+/* ============================================================
+   CashPilot 16.3.1 — Planejamento mensal
+   Ordem visual e limites por categoria sem texto comprimido.
+   ============================================================ */
+.cp1631-planning-body .cp14-planning-layout {
+    align-items: start;
+    margin-top: 18px;
+}
+
+.cp1631-planning-body .cp14-planning-layout > .surface-card {
+    height: auto;
+}
+
+.cp1631-planning-body .cp14-category-plan-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.cp1631-planning-body .cp14-category-plan-grid label {
+    min-width: 0;
+    min-height: 52px;
+    grid-template-columns: minmax(0, 1fr) minmax(120px, 138px);
+    gap: 12px;
+    padding: 9px 11px;
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.cp1631-planning-body .cp14-category-plan-grid label > span {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.cp1631-planning-body .cp14-category-plan-grid input {
+    width: 100%;
+    min-width: 0;
+}
+
+.cp1631-planning-body .cp14-plan-progress-head {
+    align-items: baseline;
+}
+
+.cp1631-planning-body .cp14-plan-progress-head strong {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.cp1631-planning-body .cp14-plan-progress-head span {
+    flex: 0 0 auto;
+    text-align: right;
+}
+
+.cp1631-planning-body .cp14-month-allocation {
+    margin-top: 18px;
+}
+
+.cp1631-planning-body .cp152-simulator {
+    margin-top: 24px;
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .cp1631-planning-body .cp14-category-plan-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .cp1631-planning-body .cp14-head-actions,
+    .cp1631-planning-body .cp14-head-actions form,
+    .cp1631-planning-body .cp14-head-actions :is(input, button) {
+        width: 100% !important;
+    }
+
+    .cp1631-planning-body .cp14-planning-layout {
+        margin-top: 14px;
+        gap: 12px;
+    }
+
+    .cp1631-planning-body .cp14-category-plan {
+        margin-block: 18px;
+    }
+
+    .cp1631-planning-body .cp14-category-plan-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 8px;
+    }
+
+    .cp1631-planning-body .cp14-category-plan-grid label {
+        width: 100%;
+        grid-template-columns: minmax(0, 1fr) minmax(112px, 132px);
+    }
+
+    .cp1631-planning-body .cp14-plan-progress-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .cp1631-planning-body .cp14-plan-progress-head span {
+        text-align: left;
+    }
+
+    .cp1631-planning-body .cp14-allocation-cards {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .cp1631-planning-body .cp14-allocation-cards > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .cp1631-planning-body .cp14-allocation-cards strong {
+        margin-top: 0;
+        text-align: right;
+    }
+
+    .cp1631-planning-body .cp152-sim-card,
+    .cp1631-planning-body .cp152-sim-form {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .cp1631-planning-body .cp152-sim-card {
+        gap: 14px;
+    }
+}
+
+@media (max-width: 420px) {
+    .cp1631-planning-body .cp14-category-plan-grid label {
+        align-items: stretch;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    .cp1631-planning-body .cp14-category-plan-grid input {
+        min-height: 44px;
+    }
+
+    .cp1631-planning-body .cp152-sim-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* CashPilot 16.5 — estados claros da conexão bancária */
+.cp165-connection-state {
+    margin: 12px 0 0;
+    color: var(--cp141-muted);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.cp165-duplicate-confirm {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 7px;
+    color: var(--cp141-muted);
+    font-size: 10px;
+}
+
+.cp165-duplicate-confirm input {
+    margin: 0;
+}
+
+.cp153-status.processing {
+    border-color: color-mix(in srgb, #3b82f6 45%, var(--cp141-border));
+    color: #3b82f6;
+}
+
+.cp153-status.warning {
+    border-color: color-mix(in srgb, #d97706 45%, var(--cp141-border));
+    color: #b45309;
+}
+
+.cp153-status.error {
+    border-color: color-mix(in srgb, #dc2626 42%, var(--cp141-border));
+    color: #dc2626;
+}
+
+[data-theme="dark"] .cp153-status.warning {
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .cp153-status.error {
+    color: #f87171;
+}
+
+[data-theme="dark"] .cp153-status.processing {
+    color: #60a5fa;
+}

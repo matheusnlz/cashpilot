@@ -1,200 +1,179 @@
 <?php
 
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/icons.php';
 
 exigirLogin();
 
 $empreendedor = usuarioLogadoTipo() === 'mei';
 $primeiroNome = explode(' ', trim(usuarioLogadoNome()))[0] ?? 'usuário';
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br" data-theme="<?= limpar($_SESSION['tema_preferido'] ?? 'light') ?>">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo · CashPilot</title>
-    <link rel="stylesheet" href="../assets/css/style.css?v=11.4.1">
-<link rel="stylesheet" href="../assets/css/components.css?v=13.4">
-<link rel="stylesheet" href="../assets/css/theme.css?v=13.4.1">
-</head>
-<body class="welcome-body">
-<main class="welcome-shell">
-    <section class="welcome-card">
-        <div class="welcome-brand">
-            <img src="../assets/img/logo-cashpilot-escura.png" alt="CashPilot">
-        </div>
 
-        <div class="welcome-progress">
-            <span class="ativo" data-welcome-dot="0"></span>
-            <span data-welcome-dot="1"></span>
-            <span data-welcome-dot="2"></span>
-            <span data-welcome-dot="3"></span>
-            <span data-welcome-dot="4"></span>
-        </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bem-vindo · CashPilot</title>
+        <link rel="stylesheet" href="../assets/css/style.css?v=11.4.1">
+        <link rel="stylesheet" href="../assets/css/components.css?v=13.4">
+        <link rel="stylesheet" href="../assets/css/theme.css?v=13.4.1">
+        <link rel="stylesheet" href="../assets/css/cashpilot16_3.css?v=16.6">
+        <link rel="stylesheet" href="../assets/css/cashpilot16_8.css?v=16.9">
+    </head>
 
-        <div class="welcome-slide ativo" data-welcome-slide="0">
-            <span class="eyebrow">BEM-VINDO AO CASHPILOT</span>
-            <h1>Olá, <?= limpar($primeiroNome) ?>.</h1>
-            <p>
-                O CashPilot transforma seus registros financeiros em uma visão
-                mais clara do que está acontecendo e do que merece atenção.
-            </p>
-        </div>
+    <body class="welcome-body">
+        <main class="welcome-shell">
+            <section class="welcome-card">
+                <div class="welcome-brand">
+                    <img src="../assets/img/logo-cashpilot-transparente.png" alt="CashPilot">
+                </div>
 
-        <div class="welcome-slide" data-welcome-slide="1">
-            <span class="eyebrow">1 · DASHBOARD</span>
-            <h1>Comece pela visão geral.</h1>
-            <p>
-                Seu Dashboard resume os principais indicadores.
-                <?= $empreendedor
-                    ? 'No perfil Empreendedor, os destaques também consideram o segmento e a prioridade do negócio.'
-                    : 'No perfil Pessoa Física, ele conecta gastos, orçamento, metas e saúde financeira.' ?>
-            </p>
-        </div>
+                <div class="welcome-progress">
+                    <span class="ativo" data-welcome-dot="0"></span>
+                    <span data-welcome-dot="1"></span>
+                    <span data-welcome-dot="2"></span>
+                    <span data-welcome-dot="3"></span>
+                    <span data-welcome-dot="4"></span>
+                    <span data-welcome-dot="5"></span>
+                </div>
 
-        <div class="welcome-slide" data-welcome-slide="2">
-            <span class="eyebrow">2 · MOVIMENTAÇÕES</span>
-            <h1>Registre ou importe seus dados.</h1>
-            <p>
-                Receitas e despesas alimentam todo o restante do sistema.
-                Quanto melhor os dados estiverem classificados, melhores serão
-                o RadarPilot, os relatórios e o Copiloto.
-            </p>
-        </div>
+                <div class="welcome-slide ativo" data-welcome-slide="0">
+                    <span class="eyebrow">BEM-VINDO AO CASHPILOT</span>
+                    <h1>Olá, <?= limpar($primeiroNome) ?>.</h1>
+                    <p>
+                        O CashPilot transforma seus registros financeiros em uma visão
+                        mais clara do que está acontecendo e do que merece atenção.
+                    </p>
+                </div>
 
-        <div class="welcome-slide" data-welcome-slide="3">
-            <span class="eyebrow">3 · RADARPILOT</span>
-            <h1>Veja o que merece atenção.</h1>
-            <p>
-                O RadarPilot identifica mudanças, riscos e pontos positivos
-                usando os dados registrados no CashPilot.
-            </p>
-        </div>
+                <div class="welcome-slide" data-welcome-slide="1">
+                    <span class="eyebrow">1 · DASHBOARD</span>
+                    <h1>Comece pela visão geral.</h1>
+                    <p>
+                        Seu Dashboard resume os principais indicadores.
+                        <?= $empreendedor
+                        ? 'No perfil Empreendedor, os destaques também consideram o segmento e a prioridade do negócio.'
+                        : 'No perfil Pessoa Física, ele conecta gastos, orçamento, metas e saúde financeira.' ?>
+                         </p>
+                </div>
 
-        <div class="welcome-slide" data-welcome-slide="4">
-            <span class="eyebrow">4 · COPILOTO</span>
-            <h1>Transforme dados em explicações.</h1>
-            <p>
-                Pergunte sobre sua situação financeira ou sobre o negócio.
-                O Copiloto usa os dados disponíveis no CashPilot como contexto
-                e informa quando falta informação.
-            </p>
-        </div>
+                <div class="welcome-slide" data-welcome-slide="2">
+                    <span class="eyebrow">2 · MOVIMENTAÇÕES</span>
+                    <h1>Registre ou importe seus dados.</h1>
+                    <p>
+                        Receitas e despesas alimentam todo o restante do sistema.
+                        Quanto melhor os dados estiverem classificados, melhores serão
+                        o RadarPilot, os relatórios e o Copiloto.
+                    </p>
+                </div>
 
-        <div class="welcome-actions">
-            <button
-                type="button"
-                class="btn btn-secundario"
-                id="welcomePular"
-            >
-                Pular apresentação
-            </button>
+                <div class="welcome-slide" data-welcome-slide="3">
+                    <span class="eyebrow">3 · RADARPILOT</span>
+                    <h1>Veja o que merece atenção.</h1>
+                    <p>
+                        O RadarPilot identifica mudanças, riscos e pontos positivos
+                        usando os dados registrados no CashPilot.
+                    </p>
+                </div>
 
-            <div>
-                <button
-                    type="button"
-                    class="btn btn-secundario"
-                    id="welcomeVoltar"
-                    hidden
-                >
-                    Voltar
-                </button>
+                <div class="welcome-slide" data-welcome-slide="4">
+                    <span class="eyebrow">4 · COPILOTO</span>
+                    <h1>Transforme dados em explicações.</h1>
+                    <p>
+                        Pergunte sobre sua situação financeira ou sobre o negócio.
+                        O Copiloto usa os dados disponíveis no CashPilot como contexto
+                        e informa quando falta informação.
+                    </p>
+                </div>
 
-                <button
-                    type="button"
-                    class="btn btn-primario"
-                    id="welcomeAvancar"
-                >
-                    Continuar
-                </button>
-            </div>
-        </div>
+                <div class="welcome-slide" data-welcome-slide="5">
+                    <span class="eyebrow">COMECE PELO ESSENCIAL</span>
+                    <h1>Três passos deixam tudo pronto.</h1>
+                    <p>Ao entrar, você verá este roteiro no Dashboard e poderá dispensá-lo quando quiser.</p>
+                    <div class="cp168-welcome-steps">
+                        <span><?= cpIcon('bank-link') ?> Organize uma conta</span>
+                        <span><?= cpIcon('transactions') ?> Adicione uma movimentação</span>
+                        <span><?= cpIcon($empreendedor ? 'sales' : 'planning') ?>
+                            <?= $empreendedor ? 'Registre uma venda' : 'Crie seu primeiro plano' ?>
+                        </span>
+                    </div>
+                </div>
 
-        <form
-            action="../actions/preferencias.php"
-            method="POST"
-            id="welcomeFinalizar"
-            hidden
-        >
-            <?= csrfCampo() ?>
-            <input type="hidden" name="acao" value="concluir_onboarding">
-        </form>
-    </section>
-</main>
+                <div class="welcome-actions">
+                    <button type="button" class="btn btn-secundario" id="welcomePular">
+                        Pular apresentação
+                    </button>
 
-<script>
-const slides = [...document.querySelectorAll('[data-welcome-slide]')];
+                    <div>
+                        <button type="button" class="btn btn-secundario" id="welcomeVoltar" hidden>
+                            Voltar
+                        </button>
 
-const dots = [...document.querySelectorAll('[data-welcome-dot]')];
+                        <button type="button" class="btn btn-primario" id="welcomeAvancar">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
 
-const voltar = document.getElementById('welcomeVoltar');
+                <form action="../actions/preferencias.php" method="POST" id="welcomeFinalizar"
+                    hidden>
+                    <?= csrfCampo() ?>
 
-const avancar = document.getElementById('welcomeAvancar');
+                    <input type="hidden" name="acao" value="concluir_onboarding">
+                </form>
+            </section>
+        </main>
 
-const pular = document.getElementById('welcomePular');
+        <script>
+            const slides = [...document.querySelectorAll('[data-welcome-slide]')];
+            const dots = [...document.querySelectorAll('[data-welcome-dot]')];
+            const voltar = document.getElementById('welcomeVoltar');
+            const avancar = document.getElementById('welcomeAvancar');
+            const pular = document.getElementById('welcomePular');
+            const finalizar = document.getElementById('welcomeFinalizar');
+            let atual = 0;
 
-const finalizar = document.getElementById('welcomeFinalizar');
+            function renderizar() {
+                slides.forEach((slide, indice) => {
+                    slide.classList.toggle('ativo', indice === atual);
+                });
+                dots.forEach((dot, indice) => {
+                    dot.classList.toggle('ativo', indice <= atual);
+                });
+                voltar.hidden = atual === 0;
+                avancar.textContent =
+                    atual === slides.length - 1 ?
+                    'Entrar no CashPilot' :
+                    'Continuar';
+            }
 
+            function concluir() {
+                finalizar.submit();
+            }
+            avancar.addEventListener('click', () => {
+                if (atual === slides.length - 1) {
+                    concluir();
+                    return;
+                }
+                atual += 1;
+                renderizar();
+            });
+            voltar.addEventListener('click', () => {
+                atual = Math.max(0, atual - 1);
+                renderizar();
+            });
+            pular.addEventListener('click', concluir);
+            renderizar();
+        </script>
+        <script src="../assets/js/interface.js?v=13.4">
 
-let atual = 0;
+        </script>
+        <script src="../assets/js/ui-controls.js?v=13.4.1">
 
+        </script>
+    </body>
 
-function renderizar() {
-
-    slides.forEach((slide, indice) => {
-        slide.classList.toggle('ativo', indice === atual);
-    });
-
-
-    dots.forEach((dot, indice) => {
-        dot.classList.toggle('ativo', indice <= atual);
-    });
-
-
-    voltar.hidden = atual === 0;
-
-    avancar.textContent =
-        atual === slides.length - 1
-            ? 'Entrar no CashPilot'
-            : 'Continuar';
-
-}
-
-
-function concluir() {
-
-    finalizar.submit();
-
-}
-
-
-avancar.addEventListener('click', () => {
-    if (atual === slides.length - 1) {
-        concluir();
-        return;
-    }
-
-    atual += 1;
-    renderizar();
-});
-
-
-voltar.addEventListener('click', () => {
-    atual = Math.max(0, atual - 1);
-    renderizar();
-});
-
-
-pular.addEventListener('click', concluir);
-
-
-renderizar();
-</script>
-<script src="../assets/js/interface.js?v=13.4">
-
-</script>
-<script src="../assets/js/ui-controls.js?v=13.4.1">
-
-</script>
-</body>
 </html>

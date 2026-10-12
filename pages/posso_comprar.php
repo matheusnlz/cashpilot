@@ -10,7 +10,7 @@ exigirLogin();
 
 if (usuarioLogadoTipo() !== 'pessoa_fisica') {
     header('Location: dashboard.php');
-    exit;
+    exit();
 }
 
 $tituloPagina = 'Posso comprar?';
@@ -32,14 +32,15 @@ $planejamento = $visao['planejamento'] ?? [];
 $patrimonio = $visao['patrimonio'] ?? [];
 
 $metasMensais = 0.0;
-foreach (($visao['metas'] ?? []) as $meta) {
+foreach ($visao['metas'] ?? [] as $meta) {
     if ($meta['mensal_necessario'] !== null) {
         $metasMensais += (float) $meta['mensal_necessario'];
     }
 }
 
-$temPlanejamento = (float) ($planejamento['receita_esperada'] ?? 0) > 0
-    || (float) ($planejamento['comprometido_planejado'] ?? 0) > 0;
+$temPlanejamento =
+    (float) ($planejamento['receita_esperada'] ?? 0) > 0 ||
+    (float) ($planejamento['comprometido_planejado'] ?? 0) > 0;
 
 $dadosCompra = [
     'receitaMedia' => $receitaMedia,
@@ -56,12 +57,13 @@ $dadosCompra = [
         ? (float) ($planejamento['disponivel_planejado'] ?? 0)
         : null,
     'metasMensais' => $metasMensais,
-    'metasAtivas' => count($visao['metas'] ?? []),
+    'metasAtivas' => count($visao['metas'] ?? [])
 ];
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 ?>
+
 
 <div class="page-head cp1431-buy-head">
     <div>
@@ -72,12 +74,9 @@ require_once __DIR__ . '/../includes/navbar.php';
             planejamento, reserva e metas antes de assumir o compromisso.
         </p>
     </div>
-    <button
-        type="button"
-        class="btn btn-secundario"
-        data-copiloto-pergunta="Explique como devo avaliar uma compra antes de assumir o compromisso, considerando fluxo mensal, reserva, planejamento e metas."
-    >
-        ✦ Como avaliar uma compra
+    <button type="button" class="btn btn-secundario"
+        data-copiloto-pergunta="Explique como devo avaliar uma compra antes de assumir o compromisso, considerando fluxo mensal, reserva, planejamento e metas.">
+        <?= cpIcon('copilot', 'cp-icon-inline') ?> Como avaliar uma compra
     </button>
 </div>
 
@@ -86,7 +85,7 @@ require_once __DIR__ . '/../includes/navbar.php';
         <span>Folga média mensal</span>
         <strong class="<?= $folgaMedia >= 0 ? 'positivo' : 'negativo' ?>">
             <?= formatarMoeda($folgaMedia) ?>
-        </strong>
+             </strong>
         <small>Receita média menos despesa média dos últimos 3 meses</small>
     </article>
 
@@ -98,7 +97,12 @@ require_once __DIR__ . '/../includes/navbar.php';
 
     <article>
         <span>Reserva</span>
-        <strong><?= number_format((float) ($reserva['cobertura_meses'] ?? 0), 1, ',', '.') ?> mês(es)</strong>
+        <strong><?= number_format(
+            (float) ($reserva['cobertura_meses'] ?? 0),
+            1,
+            ',',
+            '.'
+        ) ?> mês(es)</strong>
         <small><?= formatarMoeda((float) ($reserva['valor_atual'] ?? 0)) ?> registrados</small>
     </article>
 
@@ -106,14 +110,14 @@ require_once __DIR__ . '/../includes/navbar.php';
         <span>Planejamento</span>
         <strong>
             <?= $temPlanejamento
-                ? formatarMoeda((float) ($planejamento['disponivel_planejado'] ?? 0))
-                : '—' ?>
-        </strong>
+            ? formatarMoeda((float) ($planejamento['disponivel_planejado'] ?? 0))
+            : '—' ?>
+             </strong>
         <small>
             <?= $temPlanejamento
-                ? 'valor ainda disponível no planejamento do mês'
-                : 'nenhum planejamento mensal definido' ?>
-        </small>
+            ? 'valor ainda disponível no planejamento do mês'
+            : 'nenhum planejamento mensal definido' ?>
+             </small>
     </article>
 </section>
 
@@ -135,7 +139,8 @@ require_once __DIR__ . '/../includes/navbar.php';
             <div class="form-linha">
                 <div class="form-grupo">
                     <label for="pcValor">Valor da compra</label>
-                    <input type="number" step="0.01" min="0.01" id="pcValor" required placeholder="0,00">
+                    <input type="number" step="0.01" min="0.01" id="pcValor" required
+                        placeholder="0,00">
                 </div>
 
                 <div class="form-grupo">
@@ -161,7 +166,8 @@ require_once __DIR__ . '/../includes/navbar.php';
                 </div>
 
                 <div class="form-grupo">
-                    <label for="pcJuros">Juros ao mês <span class="cp1431-optional">opcional</span></label>
+                    <label for="pcJuros">Juros ao mês <span
+                            class="cp1431-optional">opcional</span></label>
                     <div class="cp1431-percent-input">
                         <input type="number" step="0.01" min="0" max="100" id="pcJuros" value="0">
                         <span>% a.m.</span>
@@ -204,11 +210,15 @@ require_once __DIR__ . '/../includes/navbar.php';
             </div>
             <div>
                 <span>Metas com necessidade mensal</span>
-                <strong><?= $metasMensais > 0 ? formatarMoeda($metasMensais) . '/mês' : '—' ?></strong>
+                <strong><?= $metasMensais > 0
+                ? formatarMoeda($metasMensais) . '/mês'
+                : '—' ?></strong>
             </div>
             <div>
                 <span>CashScore</span>
-                <strong><?= (int) ($score['score'] ?? 0) ?>/100 · <?= limpar((string) ($score['nivel'] ?? '')) ?></strong>
+                <strong><?= (int) ($score['score'] ?? 0) ?>/100 · <?= limpar(
+                    (string) ($score['nivel'] ?? '')
+                ) ?></strong>
             </div>
         </div>
 
@@ -225,10 +235,10 @@ require_once __DIR__ . '/../includes/navbar.php';
 <section id="pcResultado" class="cp1431-buy-result" hidden aria-live="polite"></section>
 
 <script>
-window.CASH_PILOT_COMPRA = <?= json_encode(
-    $dadosCompra,
-    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-) ?>;
+    window.CASH_PILOT_COMPRA = <?= json_encode(
+        $dadosCompra,
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    ) ?>;
 </script>
 <script src="../assets/js/posso-comprar.js?v=14.3.1">
 

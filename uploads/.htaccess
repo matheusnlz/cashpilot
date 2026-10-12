@@ -1,4 +1,10 @@
 Options -Indexes
-<FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh|exe|com|bat|cmd)$">
+
+<FilesMatch "(?i)\.(php|phtml|phar|cgi|pl|py|sh|exe|com|bat|cmd|htaccess|user\.ini)$">
     Require all denied
 </FilesMatch>
+
+<IfModule mod_mime.c>
+    RemoveHandler .php .phtml .phar .cgi .pl .py .sh
+    RemoveType .php .phtml .phar .cgi .pl .py .sh
+</IfModule>

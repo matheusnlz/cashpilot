@@ -1,66 +1,49 @@
 (function () {
+    const boxes = document.querySelectorAll('[data-resend-seconds]');
 
-            const boxes = document.querySelectorAll('[data-resend-seconds]');
+    boxes.forEach((box) => {
+        const button = box.querySelector('[data-resend-button]');
 
-            boxes.forEach((box) => {
+        const label = box.querySelector('[data-resend-label]');
 
-                        const button = box.querySelector('[data-resend-button]');
+        if (!button || !label) return;
 
-                        const label = box.querySelector('[data-resend-label]');
+        let seconds = Number.parseInt(box.getAttribute('data-resend-seconds') || '0', 10);
 
-                        if (!button || !label)
-                            return;
+        if (!Number.isFinite(seconds) || seconds <= 0) {
+            button.disabled = false;
 
-                        let seconds = Number.parseInt(box.getAttribute('data-resend-seconds') || '0', 10);
+            label.textContent = 'Reenviar código';
 
-                        if (!Number.isFinite(seconds) || seconds <= 0) {
-
-                                    button.disabled = false;
-
-                                    label.textContent = 'Reenviar código';
-
-                                    return;
-
+            return;
         }
 
-                        button.disabled = true;
+        button.disabled = true;
 
-                        const render = () => {
+        const render = () => {
+            if (seconds <= 0) {
+                button.disabled = false;
 
-                                    if (seconds <= 0) {
+                label.textContent = 'Reenviar código';
 
-                                                button.disabled = false;
-
-                                                label.textContent = 'Reenviar código';
-
-                                                return;
-
+                return;
             }
 
-                                    if (seconds < 60) {
+            if (seconds < 60) {
+                label.textContent = `Reenviar em ${seconds}s`;
+            } else {
+                const minutes = Math.floor(seconds / 60);
 
-                                                label.textContent = `Reenviar em ${seconds}s`;
+                const remainingSeconds = seconds % 60;
 
-            }
-                                    else {
-
-                                                const minutes = Math.floor(seconds / 60);
-
-                                                const remainingSeconds = seconds % 60;
-
-                                                label.textContent =
-                                                    `Reenviar em ${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
-
+                label.textContent = `Reenviar em ${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
             }
 
-                                    seconds -= 1;
+            seconds -= 1;
 
-                                    window.setTimeout(render, 1000);
-
+            window.setTimeout(render, 1000);
         };
 
-                        render();
-
+        render();
     });
-
 })();

@@ -8,7 +8,9 @@ $pdo = conectar();
 $uid = (int) usuarioLogadoId();
 unset($_SESSION['importacao_preview']);
 
-$stmt = $pdo->prepare('SELECT id, nome, tipo FROM contas WHERE usuario_id = :uid ORDER BY padrao DESC, nome');
+$stmt = $pdo->prepare(
+    'SELECT id, nome, tipo FROM contas WHERE usuario_id = :uid ORDER BY padrao DESC, nome'
+);
 $stmt->execute(['uid' => $uid]);
 $contas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -19,31 +21,31 @@ require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
+
 <div class="page-head">
     <div>
         <a href="perfil.php" class="back-link">← Voltar para Configurações</a>
         <span class="eyebrow">IMPORTAÇÃO INTELIGENTE</span>
         <h1>Importar extrato</h1>
         <p>
-            OFX e CSV são os formatos recomendados. PDFs com texto selecionável também podem ser analisados
-            pelo leitor local e sempre passam por revisão antes de salvar.
+            Envie um extrato CSV, revise as movimentações e confirme antes de salvar.
+            Para sincronizar automaticamente, acesse <a href="open_finance.php">Conecte seu banco</a>.
         </p>
     </div>
 </div>
 
 <?php if ($erro): ?>
-    <div class="alerta-mensagem erro"><?= limpar($erro) ?></div>
+
+
+<div class="alerta-mensagem erro"><?= limpar($erro) ?></div>
+
 <?php endif; ?>
+
 
 <div class="import-clean-layout">
     <section class="surface-card">
-        <form
-            action="../actions/importar_upload.php"
-            method="POST"
-            enctype="multipart/form-data"
-            autocomplete="off"
-            id="importForm"
-        >
+        <form action="../actions/importar_upload.php" method="POST" enctype="multipart/form-data"
+            autocomplete="off" id="importForm">
             <?= csrfCampo() ?>
 
             <div class="import-step">
@@ -57,85 +59,48 @@ require_once __DIR__ . '/../includes/navbar.php';
             <div class="form-grupo">
                 <label for="conta_id">Conta</label>
                 <select id="conta_id" name="conta_id" required>
+
                     <?php foreach ($contas as $conta): ?>
-                        <option value="<?= (int) $conta['id'] ?>"><?= limpar($conta['nome']) ?></option>
+
+
+                    <option value="<?= (int) $conta['id'] ?>"><?= limpar($conta['nome']) ?></option>
+
                     <?php endforeach; ?>
-                    <option value="nova">＋ Criar nova conta</option>
+
+
+                    <option value="nova">Criar nova conta</option>
                 </select>
             </div>
 
             <div class="form-grupo" id="grupo-nova-conta" hidden>
                 <label for="nome_nova_conta">Nome da nova conta</label>
-                <input id="nome_nova_conta" name="nome_nova_conta" placeholder="Ex.: Nubank, Inter, Conta da loja">
+                <input id="nome_nova_conta" name="nome_nova_conta"
+                    placeholder="Ex.: Nubank, Inter, Conta da loja">
             </div>
 
             <div class="import-step">
                 <span>2</span>
                 <div>
-                    <strong>Escolha o formato</strong>
-                    <small>Quanto mais estruturado o arquivo, maior tende a ser a precisão.</small>
+                    <strong>Prepare seu CSV</strong>
+                    <small>Inclua data, descrição e valor. Valores negativos representam despesas.</small>
                 </div>
             </div>
 
-            <div class="import-format-switch cp144-format-switch">
-                <label>
-                    <input type="radio" name="formato" value="ofx" checked>
-                    <span>
-                        <b>OFX</b>
-                        <small>Mais confiável para extratos</small>
-                    </span>
-                </label>
-                <label>
-                    <input type="radio" name="formato" value="csv">
-                    <span>
-                        <b>CSV</b>
-                        <small>Detecção automática de colunas</small>
-                    </span>
-                </label>
-                <label>
-                    <input type="radio" name="formato" value="pdf">
-                    <span>
-                        <b>PDF</b>
-                        <small>Leitura por layout + revisão</small>
-                    </span>
-                </label>
-            </div>
-
-            <div class="form-grupo" id="bancoPdf" hidden>
-                <label for="banco_pdf">Banco do PDF</label>
-                <select name="banco_pdf" id="banco_pdf">
-                    <option value="auto">Detectar automaticamente</option>
-                    <option value="nubank">Nubank</option>
-                    <option value="inter">Banco Inter</option>
-                    <option value="itau">Itaú</option>
-                    <option value="bradesco">Bradesco</option>
-                    <option value="santander">Santander</option>
-                    <option value="bb">Banco do Brasil</option>
-                    <option value="caixa">Caixa</option>
-                    <option value="outro">Outro / formato genérico</option>
-                </select>
-                <small class="secao-ajuda">
-                    Se a detecção automática falhar, escolher o banco ajuda o leitor a interpretar o documento.
-                </small>
-            </div>
+            <input type="hidden" name="formato" value="csv">
+            <p class="secao-ajuda">Separadores aceitos: ponto e vírgula, vírgula, tabulação e barra vertical.
+                <a href="../assets/exemplos/extrato_csv.csv" download>Baixar CSV de exemplo</a>.</p>
 
             <div class="import-step">
                 <span>3</span>
                 <div>
                     <strong>Envie o arquivo</strong>
-                    <small id="formatHelp">OFX/QFX · máximo 4 MB.</small>
+                    <small>CSV · máximo 2 MB · até 3.000 linhas para análise.</small>
                 </div>
             </div>
 
             <label class="upload-zone" for="arquivo_extrato">
-                <input
-                    type="file"
-                    id="arquivo_extrato"
-                    name="arquivo_extrato"
-                    accept=".ofx,.qfx,application/x-ofx"
-                    required
-                    hidden
-                >
+                <input type="file" id="arquivo_extrato" name="arquivo_extrato"
+                    accept=".csv,text/csv" required hidden>
                 <span class="upload-icon">⇧</span>
                 <strong>Arraste ou selecione seu extrato</strong>
                 <small id="uploadFile">Nenhum arquivo selecionado</small>
@@ -155,21 +120,24 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <span>01</span>
                 <div>
                     <strong>Leitura</strong>
-                    <p>OFX é lido como dado estruturado. CSV detecta separador, codificação e colunas. PDF usa pdfplumber e fallback compatível.</p>
+                    <p>O leitor CSV detecta separador, codificação e colunas. Confira as informações
+                        reconhecidas na próxima etapa.</p>
                 </div>
             </li>
             <li>
                 <span>02</span>
                 <div>
                     <strong>Validação</strong>
-                    <p>Datas, valores, tipo, duplicatas e confiança da leitura são avaliados antes da confirmação.</p>
+                    <p>Datas, valores, tipo, duplicatas e confiança da leitura são avaliados antes
+                        da confirmação.</p>
                 </div>
             </li>
             <li>
                 <span>03</span>
                 <div>
                     <strong>Revisão</strong>
-                    <p>Você pode corrigir descrição, data, valor, tipo e categoria antes de salvar.</p>
+                    <p>Você pode corrigir descrição, data, valor, tipo e categoria antes de salvar.
+                    </p>
                 </div>
             </li>
             <li>
@@ -182,96 +150,34 @@ require_once __DIR__ . '/../includes/navbar.php';
         </ol>
 
         <div class="import-note">
-            <strong>Ordem recomendada</strong>
-            <p>Prefira OFX. Se o banco não oferecer, use CSV. PDF deve ser a alternativa, porque cada instituição monta o documento de um jeito diferente.</p>
-        </div>
-        <div class="import-note">
-            <strong>PDF escaneado</strong>
-            <p>Se o arquivo for apenas imagem, a 14.4 identifica essa situação e não tenta inventar lançamentos. OCR será uma camada opcional posterior.</p>
+            <strong>Outra forma de registrar</strong>
+            <p>Você também pode cadastrar receitas e despesas manualmente ou conectar uma instituição
+                pela Pluggy, conforme a disponibilidade da integração.</p>
         </div>
     </aside>
 </div>
 
 <script>
-const conta = document.getElementById('conta_id');
+    const conta = document.getElementById('conta_id');
+    const grupo = document.getElementById('grupo-nova-conta');
+    const nome = document.getElementById('nome_nova_conta');
+    const arquivo = document.getElementById('arquivo_extrato');
+    const fileText = document.getElementById('uploadFile');
 
-const grupo = document.getElementById('grupo-nova-conta');
-
-const nome = document.getElementById('nome_nova_conta');
-
-const arquivo = document.getElementById('arquivo_extrato');
-
-const fileText = document.getElementById('uploadFile');
-
-const bancoPdf = document.getElementById('bancoPdf');
-
-const help = document.getElementById('formatHelp');
-
-
-function syncConta() {
-
-    const nova = conta.value === 'nova';
-
-    grupo.hidden = !nova;
-
-    nome.required = nova;
-
-}
-
-
-function syncFormato() {
-
-    const formato = document.querySelector('input[name="formato"]:checked').value;
-
-    const pdf = formato === 'pdf';
-
-    bancoPdf.hidden = !pdf;
-
-
-    if (formato === 'pdf') {
-
-        arquivo.accept = '.pdf,application/pdf';
-
-        help.textContent = 'PDF com texto selecionável · máximo 8 MB.';
-
-    }
- else if (formato === 'csv') {
-
-        arquivo.accept = '.csv,text/csv';
-
-        help.textContent = 'CSV · máximo 2 MB.';
-
-    }
- else {
-
-        arquivo.accept = '.ofx,.qfx,application/x-ofx';
-
-        help.textContent = 'OFX/QFX · máximo 4 MB.';
-
+    function syncConta() {
+        const nova = conta.value === 'nova';
+        grupo.hidden = !nova;
+        nome.required = nova;
     }
 
-
-    arquivo.value = '';
-
-    fileText.textContent = 'Nenhum arquivo selecionado';
-
-}
-
-
-conta.addEventListener('change', syncConta);
-
-document.querySelectorAll('input[name="formato"]').forEach((input) => {
-    input.addEventListener('change', syncFormato);
-});
-
-arquivo.addEventListener('change', () => {
-    fileText.textContent = arquivo.files[0]?.name || 'Nenhum arquivo selecionado';
-});
-
-
-syncConta();
-
-syncFormato();
+    conta.addEventListener('change', syncConta);
+    arquivo.addEventListener('change', () => {
+        const selecionado = arquivo.files[0];
+        const valido = !selecionado || (/\.csv$/i.test(selecionado.name) && selecionado.size <= 2 * 1024 * 1024);
+        arquivo.setCustomValidity(valido ? '' : 'Selecione um CSV de até 2 MB.');
+        fileText.textContent = selecionado?.name || 'Nenhum arquivo selecionado';
+    });
+    syncConta();
 </script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/ambiente.php';
 /**
  * CashPilot - Conexão PDO.
  *
@@ -37,17 +38,23 @@ function conectar(): PDO
     $senha = cashpilotEnvPrimeiro(['DB_PASS', 'MYSQLPASSWORD'], '');
 
     try {
-        $dsn = 'mysql:host=' . $host
-            . ';port=' . (int) $porta
-            . ';dbname=' . $nome
-            . ';charset=utf8mb4';
+        $dsn =
+            'mysql:host=' .
+            $host .
+            ';port=' .
+            (int) $porta .
+            ';dbname=' .
+            $nome .
+            ';charset=utf8mb4';
 
         $pdo = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::ATTR_STRINGIFY_FETCHES => false,
+            PDO::ATTR_STRINGIFY_FETCHES => false
         ]);
+        // Mantém CURRENT_DATE() coerente com as datas financeiras do usuário brasileiro.
+        $pdo->exec("SET time_zone = '-03:00'");
 
         return $pdo;
     } catch (PDOException $e) {

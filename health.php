@@ -20,7 +20,7 @@ foreach ($extensoes as $extensao) {
     if (!extension_loaded($extensao)) {
         http_response_code(503);
         echo json_encode(['status' => 'unavailable']);
-        exit;
+        exit();
     }
 }
 
@@ -32,15 +32,12 @@ $senha = cpHealthEnv(['DB_PASS', 'MYSQLPASSWORD'], '');
 
 try {
     $pdo = new PDO(
-        'mysql:host=' . $host
-        . ';port=' . (int) $porta
-        . ';dbname=' . $banco
-        . ';charset=utf8mb4',
+        'mysql:host=' . $host . ';port=' . (int) $porta . ';dbname=' . $banco . ';charset=utf8mb4',
         $usuario,
         $senha,
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_TIMEOUT => 3,
+            PDO::ATTR_TIMEOUT => 3
         ]
     );
 

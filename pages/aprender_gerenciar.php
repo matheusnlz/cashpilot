@@ -40,6 +40,7 @@ require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
+
 <div class="page-head">
     <div>
         <a href="aprender.php" class="back-link">
@@ -62,10 +63,14 @@ require_once __DIR__ . '/../includes/navbar.php';
 </div>
 
 <?php if ($mensagem): ?>
-    <div class="alerta-mensagem sucesso">
-        <?= limpar($mensagem) ?>
-    </div>
+
+
+<div class="alerta-mensagem sucesso">
+    <?= limpar($mensagem) ?>
+     </div>
+
 <?php endif; ?>
+
 
 <div class="admin-learning-grid">
     <section class="cartao">
@@ -73,18 +78,10 @@ require_once __DIR__ . '/../includes/navbar.php';
             Nova trilha
         </h3>
 
-        <form
-            action="../actions/aprender.php"
-            method="POST"
-            autocomplete="off"
-        >
+        <form action="../actions/aprender.php" method="POST" autocomplete="off">
             <?= csrfCampo() ?>
 
-            <input
-                type="hidden"
-                name="acao"
-                value="trilha_criar"
-            >
+            <input type="hidden" name="acao" value="trilha_criar">
 
             <div class="form-grupo">
                 <label>Título</label>
@@ -115,11 +112,7 @@ require_once __DIR__ . '/../includes/navbar.php';
 
                 <div class="form-grupo">
                     <label>Ordem</label>
-                    <input
-                        type="number"
-                        name="ordem"
-                        value="0"
-                    >
+                    <input type="number" name="ordem" value="0">
                 </div>
             </div>
 
@@ -134,18 +127,10 @@ require_once __DIR__ . '/../includes/navbar.php';
             Novo vídeo do YouTube
         </h3>
 
-        <form
-            action="../actions/aprender.php"
-            method="POST"
-            autocomplete="off"
-        >
+        <form action="../actions/aprender.php" method="POST" autocomplete="off">
             <?= csrfCampo() ?>
 
-            <input
-                type="hidden"
-                name="acao"
-                value="video_criar"
-            >
+            <input type="hidden" name="acao" value="video_criar">
 
             <div class="form-grupo">
                 <label>Título</label>
@@ -154,11 +139,8 @@ require_once __DIR__ . '/../includes/navbar.php';
 
             <div class="form-grupo">
                 <label>URL ou ID do YouTube</label>
-                <input
-                    name="youtube_video_id"
-                    required
-                    placeholder="https://youtube.com/watch?v=..."
-                >
+                <input name="youtube_video_id" required
+                    placeholder="https://youtube.com/watch?v=...">
             </div>
 
             <div class="form-grupo">
@@ -169,10 +151,7 @@ require_once __DIR__ . '/../includes/navbar.php';
             <div class="form-linha">
                 <div class="form-grupo">
                     <label>Categoria</label>
-                    <input
-                        name="categoria"
-                        value="Geral"
-                    >
+                    <input name="categoria" value="Geral">
                 </div>
 
                 <div class="form-grupo">
@@ -197,10 +176,7 @@ require_once __DIR__ . '/../includes/navbar.php';
                     Tags para RadarPilot/Copiloto
                 </label>
 
-                <input
-                    name="tags"
-                    placeholder="ex.: financiamento juros crédito cartão"
-                >
+                <input name="tags" placeholder="ex.: financiamento juros crédito cartão">
             </div>
 
             <div class="form-linha">
@@ -209,10 +185,7 @@ require_once __DIR__ . '/../includes/navbar.php';
                         Nichos relacionados
                     </label>
 
-                    <input
-                        name="nichos"
-                        placeholder="ex.: barbearia beleza estética"
-                    >
+                    <input name="nichos" placeholder="ex.: barbearia beleza estética">
 
                     <small class="secao-ajuda">
                         Opcional. Use palavras simples separadas por espaço.
@@ -224,10 +197,7 @@ require_once __DIR__ . '/../includes/navbar.php';
                         Objetivos relacionados
                     </label>
 
-                    <input
-                        name="objetivos"
-                        placeholder="ex.: margem lucro vendas estoque"
-                    >
+                    <input name="objetivos" placeholder="ex.: margem lucro vendas estoque">
 
                     <small class="secao-ajuda">
                         Opcional. Ajuda a seção “Recomendado para seu negócio”.
@@ -247,10 +217,15 @@ require_once __DIR__ . '/../includes/navbar.php';
                         </option>
 
                         <?php foreach ($trilhas as $trilha): ?>
-                            <option value="<?= (int) $trilha['id'] ?>">
-                                <?= limpar($trilha['titulo']) ?>
-                            </option>
+
+
+                        <option value="<?= (int) $trilha['id'] ?>">
+                            <?= limpar($trilha['titulo']) ?>
+                             </option>
+
                         <?php endforeach; ?>
+
+
                     </select>
                 </div>
 
@@ -259,11 +234,7 @@ require_once __DIR__ . '/../includes/navbar.php';
                         Ordem
                     </label>
 
-                    <input
-                        type="number"
-                        name="ordem"
-                        value="0"
-                    >
+                    <input type="number" name="ordem" value="0">
                 </div>
             </div>
 
@@ -283,28 +254,27 @@ require_once __DIR__ . '/../includes/navbar.php';
         Vincule um vídeo já existente a uma trilha.
     </p>
 
-    <form
-        action="../actions/aprender.php"
-        method="POST"
-    >
+    <form action="../actions/aprender.php" method="POST">
         <?= csrfCampo() ?>
 
-        <input
-            type="hidden"
-            name="acao"
-            value="trilha_vincular"
-        >
+        <input type="hidden" name="acao" value="trilha_vincular">
 
         <div class="form-linha">
             <div class="form-grupo">
                 <label>Vídeo</label>
 
                 <select name="video_id" required>
+
                     <?php foreach ($videos as $video): ?>
-                        <option value="<?= (int) $video['id'] ?>">
-                            <?= limpar($video['titulo']) ?>
-                        </option>
+
+
+                    <option value="<?= (int) $video['id'] ?>">
+                        <?= limpar($video['titulo']) ?>
+                         </option>
+
                     <?php endforeach; ?>
+
+
                 </select>
             </div>
 
@@ -312,21 +282,23 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <label>Trilha</label>
 
                 <select name="trilha_id" required>
+
                     <?php foreach ($trilhas as $trilha): ?>
-                        <option value="<?= (int) $trilha['id'] ?>">
-                            <?= limpar($trilha['titulo']) ?>
-                        </option>
+
+
+                    <option value="<?= (int) $trilha['id'] ?>">
+                        <?= limpar($trilha['titulo']) ?>
+                         </option>
+
                     <?php endforeach; ?>
+
+
                 </select>
             </div>
 
             <div class="form-grupo">
                 <label>Ordem</label>
-                <input
-                    type="number"
-                    name="ordem"
-                    value="0"
-                >
+                <input type="number" name="ordem" value="0">
             </div>
         </div>
 
@@ -342,59 +314,69 @@ require_once __DIR__ . '/../includes/navbar.php';
     </h3>
 
     <?php if (!$videos): ?>
-        <p class="texto-vazio">
-            Nenhum vídeo cadastrado.
-        </p>
+
+
+    <p class="texto-vazio">
+        Nenhum vídeo cadastrado.
+    </p>
+
     <?php else: ?>
-        <div class="admin-video-list">
-            <?php foreach ($videos as $video): ?>
-                <div>
-                    <div>
-                        <strong>
-                            <?= limpar($video['titulo']) ?>
-                        </strong>
 
-                        <small>
-                            <?= limpar($video['categoria']) ?>
-                            ·
-                            <?= limpar($video['perfil']) ?>
-                            ·
-                            <?= limpar($video['youtube_video_id']) ?>
 
-                            <?php if (!empty($video['nichos'])): ?>
-                                · nichos:
-                                <?= limpar($video['nichos']) ?>
-                            <?php endif; ?>
-                        </small>
-                    </div>
+    <div class="admin-video-list">
 
-                    <form
-                        action="../actions/aprender.php"
-                        method="POST"
-                        data-confirm="Desativar este vídeo?"
-                    >
-                        <?= csrfCampo() ?>
+        <?php foreach ($videos as $video): ?>
 
-                        <input
-                            type="hidden"
-                            name="acao"
-                            value="video_desativar"
-                        >
 
-                        <input
-                            type="hidden"
-                            name="id"
-                            value="<?= (int) $video['id'] ?>"
-                        >
+        <div>
+            <div>
+                <strong>
+                    <?= limpar($video['titulo']) ?>
+                     </strong>
 
-                        <button class="excluir">
-                            Desativar
-                        </button>
-                    </form>
-                </div>
-            <?php endforeach; ?>
+                <small>
+                    <?= limpar($video['categoria']) ?>
+                     ·
+                    <?= limpar($video['perfil']) ?>
+                     ·
+                    <?= limpar($video['youtube_video_id']) ?>
+
+
+                    <?php if (!empty($video['nichos'])): ?>
+
+
+                    · nichos:
+                    <?= limpar($video['nichos']) ?>
+
+
+                    <?php endif; ?>
+
+
+                </small>
+            </div>
+
+            <form action="../actions/aprender.php" method="POST"
+                data-confirm="Desativar este vídeo?">
+                <?= csrfCampo() ?>
+
+                <input type="hidden" name="acao" value="video_desativar">
+
+                <input type="hidden" name="id" value="<?= (int) $video['id'] ?>">
+
+                <button class="excluir">
+                    Desativar
+                </button>
+            </form>
         </div>
+
+        <?php endforeach; ?>
+
+
+    </div>
+
     <?php endif; ?>
+
+
 </section>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

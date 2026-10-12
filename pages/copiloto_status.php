@@ -17,7 +17,7 @@ $stmt = $pdo->prepare(
 );
 
 $stmt->execute([
-    'uid' => $usuarioId,
+    'uid' => $usuarioId
 ]);
 
 if (!(bool) $stmt->fetchColumn()) {
@@ -35,12 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mensagensTeste = [
         [
             'role' => 'system',
-            'content' => 'Você está executando um teste técnico do CashPilot. Responda somente com: OK',
+            'content' =>
+                'Você está executando um teste técnico do CashPilot. Responda somente com: OK'
         ],
         [
             'role' => 'user',
-            'content' => 'Teste de conexão do Copiloto.',
-        ],
+            'content' => 'Teste de conexão do Copiloto.'
+        ]
     ];
 
     $teste = enviarParaIADetalhado($mensagensTeste);
@@ -57,13 +58,14 @@ function cpStatusHttpDescricao(?int $status): string
         429 => 'Limite temporário de uso atingido.',
         500, 502, 503, 504 => 'Instabilidade temporária no serviço da Groq.',
         null, 0 => 'Sem resposta HTTP.',
-        default => 'Resposta HTTP ' . $status . '.',
+        default => 'Resposta HTTP ' . $status . '.'
     };
 }
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 ?>
+
 
 <div class="page-head">
     <div>
@@ -84,10 +86,8 @@ require_once __DIR__ . '/../includes/navbar.php';
     <section class="surface-card">
         <span class="eyebrow">CONFIGURAÇÃO</span>
         <h2>
-            <?= chaveIAConfigurada()
-                ? 'Configuração encontrada'
-                : 'Chave não encontrada' ?>
-        </h2>
+            <?= chaveIAConfigurada() ? 'Configuração encontrada' : 'Chave não encontrada' ?>
+             </h2>
 
         <div class="status-list">
             <div>
@@ -135,85 +135,109 @@ require_once __DIR__ . '/../includes/navbar.php';
         </form>
 
         <?php if ($teste): ?>
-            <div class="ai-test-result <?= $teste['ok'] ? 'ok' : 'fail' ?>">
-                <strong>
-                    <?= $teste['ok']
-                        ? 'Conexão funcionando'
-                        : 'Falha na conexão' ?>
-                </strong>
 
-                <?php if ($teste['ok']): ?>
-                    <span>
-                        Modelo utilizado:
-                        <?= limpar((string) $teste['model']) ?>
-                        <?= !empty($teste['used_fallback']) ? ' · fallback utilizado' : '' ?>
-                    </span>
 
-                    <?php
-                    $detalheSucesso = !empty($teste['used_fallback'])
-                        ? ($teste['fallback'] ?? [])
-                        : ($teste['primary'] ?? []);
-                    ?>
+        <div class="ai-test-result <?= $teste['ok'] ? 'ok' : 'fail' ?>">
+            <strong>
+                <?= $teste['ok'] ? 'Conexão funcionando' : 'Falha na conexão' ?>
+                 </strong>
 
-                    <span>
-                        HTTP <?= (int) ($detalheSucesso['http_status'] ?? 0) ?>
-                        · <?= number_format((float) ($detalheSucesso['elapsed'] ?? 0), 2, ',', '.') ?>s
-                    </span>
-                <?php else: ?>
-                    <?php $principal = $teste['primary'] ?? []; ?>
+            <?php if ($teste['ok']): ?>
 
-                    <span>
-                        Principal:
-                        <?= limpar((string) ($principal['model'] ?? $config['model'] ?? '')) ?>
-                    </span>
 
-                    <span>
-                        <?= limpar(
-                            cpStatusHttpDescricao(
-                                isset($principal['http_status'])
-                                    ? (int) $principal['http_status']
-                                    : null
-                            )
-                        ) ?>
-                    </span>
+            <span>
+                Modelo utilizado:
+                <?= limpar((string) $teste['model']) ?>
+                 <?= !empty($teste['used_fallback']) ? ' · fallback utilizado' : '' ?>
+                 </span>
 
-                    <?php if (!cashpilotEhProducao() && !empty($principal['api_error'])): ?>
-                        <span>
-                            API: <?= limpar(mb_substr((string) $principal['api_error'], 0, 240)) ?>
-                        </span>
-                    <?php endif; ?>
+            <?php $detalheSucesso = !empty($teste['used_fallback'])
+            ? $teste['fallback'] ?? []
+            : $teste['primary'] ?? []; ?>
 
-                    <?php if (!cashpilotEhProducao() && !empty($principal['curl_error'])): ?>
-                        <span>
-                            cURL: <?= limpar(mb_substr((string) $principal['curl_error'], 0, 240)) ?>
-                        </span>
-                    <?php endif; ?>
 
-                    <?php if (!empty($teste['fallback'])): ?>
-                        <?php $fallback = $teste['fallback']; ?>
+            <span>
+                HTTP <?= (int) ($detalheSucesso['http_status'] ?? 0) ?>
+                 · <?= number_format((float) ($detalheSucesso['elapsed'] ?? 0), 2, ',', '.') ?>s
+            </span>
 
-                        <span>
-                            Fallback:
-                            <?= limpar((string) ($fallback['model'] ?? $config['fallback_model'] ?? '')) ?>
-                            · <?= limpar(
-                                cpStatusHttpDescricao(
-                                    isset($fallback['http_status'])
-                                        ? (int) $fallback['http_status']
-                                        : null
-                                )
-                            ) ?>
-                        </span>
+            <?php else: ?>
 
-                        <?php if (!cashpilotEhProducao() && !empty($fallback['api_error'])): ?>
-                            <span>
-                                API fallback:
-                                <?= limpar(mb_substr((string) $fallback['api_error'], 0, 240)) ?>
-                            </span>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </div>
+
+            <?php $principal = $teste['primary'] ?? []; ?>
+
+
+            <span>
+                Principal:
+                <?= limpar((string) ($principal['model'] ?? ($config['model'] ?? ''))) ?>
+                 </span>
+
+            <span>
+                <?= limpar(
+                    cpStatusHttpDescricao(
+                        isset($principal['http_status']) ? (int) $principal['http_status'] : null
+                    )
+                ) ?>
+                 </span>
+
+            <?php if (!cashpilotEhProducao() && !empty($principal['api_error'])): ?>
+
+
+            <span>
+                API: <?= limpar(mb_substr((string) $principal['api_error'], 0, 240)) ?>
+                 </span>
+
+            <?php endif; ?>
+
+
+            <?php if (!cashpilotEhProducao() && !empty($principal['curl_error'])): ?>
+
+
+            <span>
+                cURL: <?= limpar(mb_substr((string) $principal['curl_error'], 0, 240)) ?>
+                 </span>
+
+            <?php endif; ?>
+
+
+            <?php if (!empty($teste['fallback'])): ?>
+
+
+            <?php $fallback = $teste['fallback']; ?>
+
+
+            <span>
+                Fallback:
+                <?= limpar((string) ($fallback['model'] ?? ($config['fallback_model'] ?? ''))) ?>
+                 · <?= limpar(
+                    cpStatusHttpDescricao(
+                        isset($fallback['http_status']) ? (int) $fallback['http_status'] : null
+                    )
+                ) ?>
+                 </span>
+
+            <?php if (!cashpilotEhProducao() && !empty($fallback['api_error'])): ?>
+
+
+            <span>
+                API fallback:
+                <?= limpar(mb_substr((string) $fallback['api_error'], 0, 240)) ?>
+                 </span>
+
+            <?php endif; ?>
+
+
+            <?php endif; ?>
+
+
+            <?php endif; ?>
+
+
+        </div>
+
         <?php endif; ?>
+
+
     </section>
 </div>
 
@@ -235,10 +259,10 @@ require_once __DIR__ . '/../includes/navbar.php';
     <p class="secao-ajuda">
         No XAMPP, uma variável criada depois que o Apache foi iniciado pode não
         estar disponível ao PHP. Reinicie o Apache depois de configurar
-        <code>GROQ_API_KEY</code>. Como alternativa apenas local, copie
-        <code>includes/groq_config.example.php</code> para
-        <code>includes/groq_config.php</code>. Esse arquivo continua ignorado
-        pelo Git.
+        <code>GROQ_API_KEY</code>. No XAMPP, você também pode copiar o arquivo
+        <code>.env.example</code> para <code>.env</code>, preencher somente a
+        cópia privada e reiniciar o Apache. O arquivo <code>.env</code> é
+        ignorado pelo Git e bloqueado pelo Apache.
     </p>
 </section>
 

@@ -1,0 +1,75 @@
+/* Controles compartilhados: usa os tokens existentes dos temas claro e escuro. */
+.pagination-clean a,
+.periodos-grafico button,
+.transaction-dot {
+    background: var(--cp141-surface);
+    color: var(--cp141-text);
+    border: 1px solid var(--cp141-border);
+}
+
+.pagination-clean a:hover,
+.periodos-grafico button:hover {
+    background: var(--cp141-surface-2);
+    border-color: var(--cp141-accent);
+}
+
+.pagination-clean a.ativo,
+.periodos-grafico button.ativo {
+    background: var(--cp141-accent-soft);
+    color: var(--cp141-accent);
+    border-color: var(--cp141-accent);
+}
+
+.pagination-clean a:focus-visible,
+.periodos-grafico button:focus-visible,
+.row-actions a:focus-visible,
+.row-actions button:focus-visible {
+    outline: 2px solid var(--cp141-accent);
+    outline-offset: 3px;
+}
+
+.pagination-clean [aria-disabled='true'],
+.periodos-grafico button:disabled {
+    background: var(--cp141-surface-2);
+    color: var(--cp141-muted);
+    cursor: default;
+}
+
+.pagination-clean span {
+    color: var(--cp141-muted);
+}
+
+.transaction-dot.receita {
+    background: var(--cp141-success-soft);
+    color: var(--cp141-success);
+    border-color: transparent;
+}
+
+.transaction-dot.despesa {
+    background: var(--cp141-danger-soft);
+    color: var(--cp141-danger);
+    border-color: transparent;
+}
+
+.cp154-patrimony-hero > small {
+    display: block;
+    margin-top: 12px;
+    color: var(--cp141-muted);
+}
+
+@media (max-width: 600px) {
+    .pagination-clean {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .pagination-clean a {
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .cp14-compact-form select {
+        min-width: 0;
+        width: 100%;
+    }
+}

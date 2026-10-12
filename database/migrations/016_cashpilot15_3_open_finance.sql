@@ -1,0 +1,67 @@
+-- CashPilot 15.3 — Pluggy / Open Finance
+CREATE TABLE IF NOT EXISTS pluggy_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    pluggy_item_id CHAR(36) NOT NULL,
+    connector_id INT NULL,
+    instituicao_nome VARCHAR(150) NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'CREATED',
+    execution_status VARCHAR(50) NULL,
+    perfil ENUM('pessoa_fisica','mei') NOT NULL DEFAULT 'pessoa_fisica',
+    erro_codigo VARCHAR(80) NULL,
+    erro_mensagem VARCHAR(255) NULL,
+    ultima_sincronizacao DATETIME NULL,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_pluggy_item (pluggy_item_id),
+    INDEX idx_pluggy_item_usuario (usuario_id, status),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pluggy_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    pluggy_item_id CHAR(36) NOT NULL,
+    pluggy_account_id CHAR(36) NOT NULL,
+    conta_id INT NULL,
+    nome VARCHAR(180) NOT NULL,
+    tipo VARCHAR(30) NOT NULL,
+    subtipo VARCHAR(60) NULL,
+    numero_mascarado VARCHAR(80) NULL,
+    saldo DECIMAL(15,2) NULL,
+    moeda CHAR(3) NOT NULL DEFAULT 'BRL',
+    dados_credito_json JSON NULL,
+    atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_pluggy_account (pluggy_account_id),
+    INDEX idx_pluggy_account_usuario (usuario_id, pluggy_item_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (conta_id) REFERENCES contas(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pluggy_transactions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    pluggy_item_id CHAR(36) NOT NULL,
+    pluggy_account_id CHAR(36) NOT NULL,
+    pluggy_transaction_id CHAR(36) NOT NULL,
+    descricao VARCHAR(255) NOT NULL,
+    valor DECIMAL(15,2) NOT NULL,
+    data_transacao DATE NOT NULL,
+    tipo_externo VARCHAR(30) NULL,
+    tipo_sugerido ENUM('receita','despesa') NOT NULL,
+    categoria_externa VARCHAR(120) NULL,
+    categoria_externa_id VARCHAR(40) NULL,
+    status_externo VARCHAR(30) NULL,
+    importada TINYINT(1) NOT NULL DEFAULT 0,
+    ignorada TINYINT(1) NOT NULL DEFAULT 0,
+    receita_id INT NULL,
+    despesa_id INT NULL,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_pluggy_transaction (pluggy_transaction_id),
+    INDEX idx_pluggy_tx_usuario_data (usuario_id, data_transacao),
+    INDEX idx_pluggy_tx_importacao (usuario_id, importada, ignorada),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (receita_id) REFERENCES receitas(id) ON DELETE SET NULL,
+    FOREIGN KEY (despesa_id) REFERENCES despesas(id) ON DELETE SET NULL
+) ENGINE=InnoDB;

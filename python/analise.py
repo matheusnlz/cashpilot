@@ -1,4 +1,4 @@
--"""
+"""
 CashPilot - Módulo de Análise de Dados
 ==========================================
 Gera séries de dados usadas nos gráficos e relatórios:
@@ -38,14 +38,14 @@ def evolucao_mensal(cursor, usuario_id: int, meses: int) -> list:
 
         cursor.execute(
             "SELECT COALESCE(SUM(valor), 0) AS total FROM receitas "
-            "WHERE usuario_id = %s AND data_receita BETWEEN %s AND %s",
+            "WHERE usuario_id = %s AND data_receita BETWEEN %s AND %s AND status='efetivado' AND data_receita <= CURRENT_DATE()",
             (usuario_id, inicio, fim),
         )
         total_receitas = float(cursor.fetchone()["total"])
 
         cursor.execute(
             "SELECT COALESCE(SUM(valor), 0) AS total FROM despesas "
-            "WHERE usuario_id = %s AND data_despesa BETWEEN %s AND %s",
+            "WHERE usuario_id = %s AND data_despesa BETWEEN %s AND %s AND status='efetivado' AND data_despesa <= CURRENT_DATE()",
             (usuario_id, inicio, fim),
         )
         total_despesas = float(cursor.fetchone()["total"])
@@ -69,7 +69,7 @@ def gastos_por_categoria(cursor, usuario_id: int) -> list:
         SELECT COALESCE(c.nome, 'Sem categoria') AS categoria, SUM(d.valor) AS total
         FROM despesas d
         LEFT JOIN categorias c ON c.id = d.categoria_id
-        WHERE d.usuario_id = %s AND d.data_despesa BETWEEN %s AND %s
+        WHERE d.usuario_id = %s AND d.data_despesa BETWEEN %s AND %s AND d.status='efetivado' AND d.data_despesa <= CURRENT_DATE()
         GROUP BY categoria
         ORDER BY total DESC
         """,

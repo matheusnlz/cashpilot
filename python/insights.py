@@ -57,7 +57,7 @@ def categoria_principal(cursor, usuario_id: int, inicio: date, fim: date):
         SELECT c.nome, SUM(d.valor) AS total
         FROM despesas d
         LEFT JOIN categorias c ON c.id = d.categoria_id
-        WHERE d.usuario_id = %s AND d.data_despesa BETWEEN %s AND %s
+        WHERE d.usuario_id = %s AND d.data_despesa BETWEEN %s AND %s AND d.status='efetivado' AND d.data_despesa <= CURRENT_DATE()
         GROUP BY c.nome
         ORDER BY total DESC
         LIMIT 1
@@ -133,7 +133,7 @@ def gerar_insights(usuario_id: int) -> list:
         """
         SELECT COALESCE(c.nome, 'Sem categoria') AS nome, SUM(r.valor) AS total
         FROM receitas r LEFT JOIN categorias c ON c.id = r.categoria_id
-        WHERE r.usuario_id = %s AND r.data_receita BETWEEN %s AND %s
+        WHERE r.usuario_id = %s AND r.data_receita BETWEEN %s AND %s AND r.status='efetivado' AND r.data_receita <= CURRENT_DATE()
         GROUP BY nome ORDER BY total DESC LIMIT 1
         """,
         (usuario_id, inicio_atual, fim_atual),

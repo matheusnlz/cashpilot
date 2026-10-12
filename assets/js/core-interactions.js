@@ -42,12 +42,7 @@
     }
 
     function openConfirmation(options) {
-        if (
-            !confirmOverlay ||
-            !confirmTitle ||
-            !confirmMessage ||
-            !confirmAccept
-        ) {
+        if (!confirmOverlay || !confirmTitle || !confirmMessage || !confirmAccept) {
             if (typeof options.action === 'function') {
                 options.action();
             }
@@ -91,18 +86,16 @@
             document.body.classList.add('drawer-aberto');
         }
 
-        document
-            .querySelectorAll('form[onsubmit*="confirm("]')
-            .forEach((form) => {
-                const original = form.getAttribute('onsubmit') || '';
-                const match = original.match(/confirm\(['"](.+?)['"]\)/);
+        document.querySelectorAll('form[onsubmit*="confirm("]').forEach((form) => {
+            const original = form.getAttribute('onsubmit') || '';
+            const match = original.match(/confirm\(['"](.+?)['"]\)/);
 
-                if (match) {
-                    form.dataset.confirm = match[1];
-                }
+            if (match) {
+                form.dataset.confirm = match[1];
+            }
 
-                form.removeAttribute('onsubmit');
-            });
+            form.removeAttribute('onsubmit');
+        });
 
         document.querySelectorAll('.alerta-mensagem').forEach((alert) => {
             alert.classList.add('cp-toast');
@@ -144,14 +137,12 @@
 
             openConfirmation({
                 title: confirmLink.dataset.confirmTitle || 'Sair do CashPilot?',
-                message:
-                    confirmLink.dataset.confirmMessage ||
-                    'Deseja continuar?',
+                message: confirmLink.dataset.confirmMessage || 'Deseja continuar?',
                 confirmText: 'Sair',
                 danger: true,
                 action: () => {
                     window.location.href = confirmLink.dataset.confirmLink;
-                },
+                }
             });
         }
     });
@@ -169,12 +160,8 @@
 
         openConfirmation({
             title: text,
-            message:
-                form.dataset.confirmMessage ||
-                'Essa ação será aplicada imediatamente.',
-            confirmText: /excluir|desativar|arquivar/i.test(text)
-                ? 'Confirmar'
-                : 'Continuar',
+            message: form.dataset.confirmMessage || 'Essa ação será aplicada imediatamente.',
+            confirmText: /excluir|desativar|arquivar/i.test(text) ? 'Confirmar' : 'Continuar',
             danger: true,
             action: () => {
                 form.dataset.confirmBypass = '1';
@@ -184,7 +171,7 @@
                 } else {
                     form.submit();
                 }
-            },
+            }
         });
     });
 

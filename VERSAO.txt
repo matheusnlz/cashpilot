@@ -1,3 +1,0 @@
-CashPilot 14.10
-Etapa: preparação para hospedagem e produção
-Base aprovada: CashPilot 14.9.2

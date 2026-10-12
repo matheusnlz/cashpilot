@@ -3,6 +3,9 @@ includes/openai_config.php
 includes/groq_config.php
 includes/email_config.php
 includes/oauth_config.php
+includes/pluggy_config.php
+includes/segredos.php
+secrets.php
 .env
 .env.*
 !.env.example

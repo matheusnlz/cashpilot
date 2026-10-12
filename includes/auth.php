@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/ambiente.php';
+require_once __DIR__ . '/financeiro_regras.php';
+require_once __DIR__ . '/seguranca17.php';
 /**
  * CashPilot - Controle de sessão, autenticação e proteções HTTP.
  */
@@ -36,7 +39,7 @@ function cashpilotRemoverCookieSessao(): void
         'domain' => $parametros['domain'] ?? '',
         'secure' => (bool) ($parametros['secure'] ?? false),
         'httponly' => true,
-        'samesite' => 'Lax',
+        'samesite' => 'Lax'
     ]);
 }
 
@@ -44,6 +47,15 @@ if (cashpilotEhProducao()) {
     ini_set('display_errors', '0');
     ini_set('display_startup_errors', '0');
     ini_set('log_errors', '1');
+    try {
+        cp17ChaveSeguranca();
+    } catch (Throwable $erro) {
+        cp17Log('Configuracao', $erro);
+        cp17Interromper(
+            503,
+            'A configuração de segurança deste ambiente precisa ser concluída pelo responsável.'
+        );
+    }
 }
 
 if (PHP_SAPI !== 'cli') {
@@ -60,7 +72,7 @@ if (PHP_SAPI !== 'cli') {
             'domain' => '',
             'secure' => cashpilotEhHttps(),
             'httponly' => true,
-            'samesite' => 'Lax',
+            'samesite' => 'Lax'
         ]);
         session_start();
     }
@@ -73,8 +85,21 @@ if (PHP_SAPI !== 'cli') {
     header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
     header('X-Permitted-Cross-Domain-Policies: none');
     header('Cross-Origin-Opener-Policy: same-origin-allow-popups');
-    header("Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com https://accounts.gstatic.com https://cdnjs.cloudflare.com https://www.youtube.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://img.youtube.com https://*.googleusercontent.com https://accounts.gstatic.com; font-src 'self' data: https://cdnjs.cloudflare.com; connect-src 'self' https://api.groq.com https://api.brevo.com https://oauth2.googleapis.com https://accounts.google.com; frame-src https://accounts.google.com https://www.youtube.com https://youtube.com; media-src 'self';");
-
+    $politicaConteudo = [
+        "default-src 'self'",
+        "base-uri 'self'",
+        "object-src 'none'",
+        "frame-ancestors 'none'",
+        "form-action 'self'",
+        "script-src 'self' 'unsafe-inline' https://accounts.google.com https://accounts.gstatic.com https://cdnjs.cloudflare.com https://www.youtube.com https://cdn.pluggy.ai",
+        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
+        "img-src 'self' data: blob: https://img.youtube.com https://*.googleusercontent.com https://accounts.gstatic.com",
+        "font-src 'self' data: https://cdnjs.cloudflare.com",
+        "connect-src 'self' https://api.groq.com https://api.brevo.com https://oauth2.googleapis.com https://accounts.google.com https://api.pluggy.ai https://*.pluggy.ai",
+        'frame-src https://accounts.google.com https://www.youtube.com https://youtube.com https://*.pluggy.ai',
+        "media-src 'self'"
+    ];
+    header('Content-Security-Policy: ' . implode('; ', $politicaConteudo) . ';');
 
     if (cashpilotEhHttps()) {
         header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
@@ -83,7 +108,7 @@ if (PHP_SAPI !== 'cli') {
     // Expira sessões abandonadas após 4 horas de inatividade.
     $agora = time();
     $ultimaAtividade = (int) ($_SESSION['_cp_ultima_atividade'] ?? 0);
-    if ($ultimaAtividade > 0 && ($agora - $ultimaAtividade) > 14400) {
+    if ($ultimaAtividade > 0 && $agora - $ultimaAtividade > 14400) {
         $_SESSION = [];
         cashpilotRemoverCookieSessao();
         session_destroy();
@@ -91,16 +116,102 @@ if (PHP_SAPI !== 'cli') {
     }
     $_SESSION['_cp_ultima_atividade'] = $agora;
     if (!empty($_SESSION['usuario_id'])) {
+        if (!cashpilotSessaoAindaValida()) {
+            $_SESSION = [];
+            cashpilotRemoverCookieSessao();
+            session_destroy();
+            session_start();
+            $_SESSION['erro_login'] = 'Sua sessão foi encerrada por segurança. Entre novamente.';
+            $prefixo = str_contains((string) ($_SERVER['PHP_SELF'] ?? ''), '/actions/')
+                ? '../pages/'
+                : '';
+            header('Location: ' . $prefixo . 'login.php');
+            exit();
+        }
         header('Cache-Control: private, no-store, max-age=0');
         header('Pragma: no-cache');
     }
+}
 
+/** Registra na sessão a versão de segurança persistida do usuário. */
+function cashpilotDefinirVersaoSessao(array $usuario): void
+{
+    $_SESSION['sessao_versao'] = max(1, (int) ($usuario['sessao_versao'] ?? 1));
+}
+
+/** Invalida sessões antigas depois de uma alteração sensível de credenciais. */
+function cashpilotRenovarVersaoSessao(PDO $pdo, int $usuarioId, bool $manterSessaoAtual = true): int
+{
+    $stmt = $pdo->prepare('UPDATE usuarios SET sessao_versao = sessao_versao + 1 WHERE id = :uid');
+    $stmt->execute(['uid' => $usuarioId]);
+    $stmt = $pdo->prepare('SELECT sessao_versao FROM usuarios WHERE id = :uid LIMIT 1');
+    $stmt->execute(['uid' => $usuarioId]);
+    $versao = max(1, (int) $stmt->fetchColumn());
+    if ($manterSessaoAtual) {
+        $_SESSION['sessao_versao'] = $versao;
+    }
+    return $versao;
+}
+
+function cashpilotSessaoAindaValida(): bool
+{
+    $uid = (int) ($_SESSION['usuario_id'] ?? 0);
+    if ($uid <= 0) {
+        return false;
+    }
+    try {
+        require_once __DIR__ . '/../database/conexao.php';
+        $pdo = conectar();
+        $stmt = $pdo->prepare('SELECT sessao_versao FROM usuarios WHERE id = :uid LIMIT 1');
+        $stmt->execute(['uid' => $uid]);
+        $banco = (int) $stmt->fetchColumn();
+        $sessao = (int) ($_SESSION['sessao_versao'] ?? 0);
+        if ($banco <= 0) {
+            return false;
+        }
+        if ($sessao <= 0) {
+            $_SESSION['sessao_versao'] = $banco; // compatibilidade com sessão criada antes da migration.
+            return true;
+        }
+        return hash_equals((string) $banco, (string) $sessao);
+    } catch (Throwable $e) {
+        error_log('CashPilot/SessaoVersao: ' . $e->getMessage());
+
+        // Em produção, uma sessão que não pôde ser validada deve ser encerrada.
+        // No XAMPP, a tolerância é mantida para facilitar a aplicação inicial
+        // das migrations sem bloquear o ambiente de desenvolvimento.
+        return !cashpilotEhProducao();
+    }
 }
 
 /** Garante que o usuário está logado. */
 function exigirLogin(): void
 {
     if (!empty($_SESSION['usuario_id'])) {
+        // CashPilot 15: contas tradicionais não navegam pelo sistema
+        // enquanto o e-mail ainda não estiver confirmado. A página de
+        // verificação e a ação de e-mail continuam acessíveis.
+        $paginaAtual = basename((string) ($_SERVER['PHP_SELF'] ?? ''));
+        $rotasLiberadas = [
+            'verificar_email.php',
+            'email_verificacao.php',
+            'logout.php',
+            'logout_transicao.php',
+            'avatar.php'
+        ];
+
+        if (
+            isset($_SESSION['email_verificado']) &&
+            !(int) $_SESSION['email_verificado'] &&
+            !in_array($paginaAtual, $rotasLiberadas, true)
+        ) {
+            $prefixo = str_contains((string) ($_SERVER['PHP_SELF'] ?? ''), '/actions/')
+                ? '../pages/'
+                : '';
+            header('Location: ' . $prefixo . 'verificar_email.php');
+            exit();
+        }
+
         return;
     }
 
@@ -111,7 +222,7 @@ function exigirLogin(): void
     }
 
     header('Location: ' . $destino);
-    exit;
+    exit();
 }
 
 /** Evita que usuário autenticado volte ao login/cadastro. */
@@ -119,7 +230,7 @@ function redirecionarSeLogado(): void
 {
     if (!empty($_SESSION['usuario_id'])) {
         header('Location: ../pages/dashboard.php');
-        exit;
+        exit();
     }
 }
 
@@ -143,9 +254,59 @@ function usuarioLogadoNome(): string
     return (string) ($_SESSION['usuario_nome'] ?? '');
 }
 
-function usuarioLogadoTipo(): string
+function usuarioLogadoTipoReal(): string
 {
     return (string) ($_SESSION['usuario_tipo'] ?? 'pessoa_fisica');
+}
+
+function usuarioEhAdminSessao(): bool
+{
+    return !empty($_SESSION['is_admin']);
+}
+
+function usuarioLogadoTipo(): string
+{
+    if (usuarioEhAdminSessao()) {
+        $modo = (string) ($_SESSION['admin_perfil_teste'] ?? '');
+        if (in_array($modo, ['pessoa_fisica', 'mei'], true)) {
+            return $modo;
+        }
+    }
+
+    return usuarioLogadoTipoReal();
+}
+
+/** Confirma autorização administrativa no banco, não apenas na sessão. */
+function exigirAdminCashPilot(PDO $pdo): void
+{
+    exigirLogin();
+
+    $usuarioId = (int) usuarioLogadoId();
+    if ($usuarioId <= 0) {
+        http_response_code(403);
+        exit('Acesso restrito.');
+    }
+
+    $stmt = $pdo->prepare('SELECT is_admin FROM usuarios WHERE id = :uid LIMIT 1');
+    $stmt->execute(['uid' => $usuarioId]);
+
+    if (!(bool) $stmt->fetchColumn()) {
+        unset($_SESSION['is_admin'], $_SESSION['admin_perfil_teste']);
+        http_response_code(403);
+        exit('Acesso restrito.');
+    }
+
+    $_SESSION['is_admin'] = 1;
+}
+
+function adminModoPerfilAtivo(): ?string
+{
+    if (!usuarioEhAdminSessao()) {
+        return null;
+    }
+
+    $modo = (string) ($_SESSION['admin_perfil_teste'] ?? '');
+    return in_array($modo, ['pessoa_fisica', 'mei'], true) ? $modo : null;
 }
 
 function usuarioLogadoUsername(): string
@@ -183,24 +344,41 @@ function renovarCsrf(): void
 /** Campo oculto para formulários POST. */
 function csrfCampo(): string
 {
-    return '<input type="hidden" name="csrf_token" value="' . limpar(csrfToken()) . '">';
+    return '<input type="hidden" name="csrf_token" value="' .
+        limpar(csrfToken()) .
+        '">' .
+        '<input type="hidden" name="operacao_token" value="' .
+        cp17TokenOperacao() .
+        '">';
 }
 
 /** Interrompe solicitações POST sem token CSRF válido. */
 function validarCsrf(): void
 {
     $token = $_POST['csrf_token'] ?? '';
-    if (!is_string($token) || empty($_SESSION['csrf_token']) || !hash_equals((string) $_SESSION['csrf_token'], $token)) {
+    if (
+        !is_string($token) ||
+        empty($_SESSION['csrf_token']) ||
+        !hash_equals((string) $_SESSION['csrf_token'], $token)
+    ) {
         http_response_code(403);
         exit('Solicitação inválida. Atualize a página e tente novamente.');
     }
+    cp17LimitarAcao(basename((string) ($_SERVER['SCRIPT_NAME'] ?? '')));
 }
 
 /** Valida categoria e conta pertencentes ao usuário. */
-function validarVinculos(PDO $pdo, int $usuarioId, ?int $categoriaId, ?int $contaId, string $tipo): bool
-{
+function validarVinculos(
+    PDO $pdo,
+    int $usuarioId,
+    ?int $categoriaId,
+    ?int $contaId,
+    string $tipo
+): bool {
     if ($categoriaId !== null) {
-        $stmt = $pdo->prepare('SELECT 1 FROM categorias WHERE id=:id AND usuario_id=:uid AND tipo=:tipo');
+        $stmt = $pdo->prepare(
+            'SELECT 1 FROM categorias WHERE id=:id AND usuario_id=:uid AND tipo=:tipo'
+        );
         $stmt->execute(['id' => $categoriaId, 'uid' => $usuarioId, 'tipo' => $tipo]);
         if (!$stmt->fetchColumn()) {
             return false;
@@ -221,10 +399,7 @@ function validarVinculos(PDO $pdo, int $usuarioId, ?int $categoriaId, ?int $cont
 /** Identificador pseudonimizado usado somente para limitar força bruta. */
 function cashpilotHashTentativa(string $valor): string
 {
-    $chave = getenv('CASHPILOT_SECURITY_KEY');
-    if (!is_string($chave) || strlen($chave) < 16) {
-        $chave = 'cashpilot-local-rate-limit-v149';
-    }
+    $chave = cp17ChaveSeguranca();
 
     return hash_hmac('sha256', mb_strtolower(trim($valor)), $chave);
 }
@@ -241,12 +416,19 @@ function cashpilotLoginBloqueado(PDO $pdo, string $identificador): int
 {
     try {
         $stmt = $pdo->prepare(
-            'SELECT bloqueado_ate FROM tentativas_login
-             WHERE identificador_hash=:identificador AND ip_hash=:ip LIMIT 1'
+            'SELECT
+                    bloqueado_ate
+                FROM
+                    tentativas_login
+                WHERE
+                    identificador_hash = :identificador
+                    AND ip_hash = :ip
+                LIMIT
+                    1'
         );
         $stmt->execute([
             'identificador' => cashpilotHashTentativa($identificador),
-            'ip' => cashpilotHashTentativa(cashpilotIpCliente()),
+            'ip' => cashpilotHashTentativa(cashpilotIpCliente())
         ]);
         $bloqueadoAte = $stmt->fetchColumn();
         if (!$bloqueadoAte) {
@@ -269,27 +451,59 @@ function cashpilotRegistrarFalhaLogin(PDO $pdo, string $identificador): void
         $ipHash = cashpilotHashTentativa(cashpilotIpCliente());
 
         $stmt = $pdo->prepare(
-            'SELECT id,tentativas,primeira_tentativa FROM tentativas_login
-             WHERE identificador_hash=:identificador AND ip_hash=:ip LIMIT 1'
+            'SELECT
+                    id,
+                    tentativas,
+                    primeira_tentativa
+                FROM
+                    tentativas_login
+                WHERE
+                    identificador_hash = :identificador
+                    AND ip_hash = :ip
+                LIMIT
+                    1'
         );
         $stmt->execute(['identificador' => $idHash, 'ip' => $ipHash]);
         $registro = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $agora = new DateTimeImmutable();
         if (!$registro || strtotime((string) $registro['primeira_tentativa']) < time() - 900) {
-            $sql = 'INSERT INTO tentativas_login (identificador_hash,ip_hash,tentativas,primeira_tentativa,ultima_tentativa,bloqueado_ate)
-                    VALUES (:identificador,:ip,1,NOW(),NOW(),NULL)
-                    ON DUPLICATE KEY UPDATE tentativas=1,primeira_tentativa=NOW(),ultima_tentativa=NOW(),bloqueado_ate=NULL';
+            $sql = 'INSERT INTO
+                    tentativas_login (
+                        identificador_hash,
+                        ip_hash,
+                        tentativas,
+                        primeira_tentativa,
+                        ultima_tentativa,
+                        bloqueado_ate
+                    )
+                VALUES
+                    (:identificador, :ip, 1, NOW(), NOW(), NULL)
+                ON DUPLICATE KEY UPDATE
+                    tentativas = 1,
+                    primeira_tentativa = NOW(),
+                    ultima_tentativa = NOW(),
+                    bloqueado_ate = NULL';
             $pdo->prepare($sql)->execute(['identificador' => $idHash, 'ip' => $ipHash]);
             return;
         }
 
         $tentativas = (int) $registro['tentativas'] + 1;
-        $bloqueadoAte = $tentativas >= 5 ? $agora->modify('+15 minutes')->format('Y-m-d H:i:s') : null;
+        $bloqueadoAte =
+            $tentativas >= 5 ? $agora->modify('+15 minutes')->format('Y-m-d H:i:s') : null;
         $pdo->prepare(
-            'UPDATE tentativas_login SET tentativas=:tentativas,ultima_tentativa=NOW(),bloqueado_ate=:bloqueado
-             WHERE id=:id'
-        )->execute(['tentativas' => $tentativas, 'bloqueado' => $bloqueadoAte, 'id' => (int) $registro['id']]);
+            'UPDATE tentativas_login
+                SET
+                    tentativas = :tentativas,
+                    ultima_tentativa = NOW(),
+                    bloqueado_ate = :bloqueado
+                WHERE
+                    id = :id'
+        )->execute([
+            'tentativas' => $tentativas,
+            'bloqueado' => $bloqueadoAte,
+            'id' => (int) $registro['id']
+        ]);
     } catch (Throwable $e) {
         error_log('CashPilot/RateLimit: ' . $e->getMessage());
     }
@@ -302,17 +516,20 @@ function cashpilotLimparFalhasLogin(PDO $pdo, string $identificador): void
             'DELETE FROM tentativas_login WHERE identificador_hash=:identificador AND ip_hash=:ip'
         )->execute([
             'identificador' => cashpilotHashTentativa($identificador),
-            'ip' => cashpilotHashTentativa(cashpilotIpCliente()),
+            'ip' => cashpilotHashTentativa(cashpilotIpCliente())
         ]);
     } catch (Throwable $e) {
         error_log('CashPilot/RateLimit: ' . $e->getMessage());
     }
 }
 
-
 /** Confirma que uma categoria pertence ao usuário autenticado. */
-function cashpilotCategoriaPertenceAoUsuario(PDO $pdo, int $usuarioId, ?int $categoriaId, ?string $tipo = null): bool
-{
+function cashpilotCategoriaPertenceAoUsuario(
+    PDO $pdo,
+    int $usuarioId,
+    ?int $categoriaId,
+    ?string $tipo = null
+): bool {
     if ($categoriaId === null || $categoriaId <= 0) {
         return true;
     }
@@ -344,15 +561,68 @@ function cashpilotContaPertenceAoUsuario(PDO $pdo, int $usuarioId, ?int $contaId
     return (bool) $stmt->fetchColumn();
 }
 
+/**
+ * Limite simples por sessão para endpoints custosos (ex.: IA).
+ * Não substitui rate limiting de infraestrutura, mas reduz abuso acidental
+ * e consumo excessivo de APIs externas por uma sessão autenticada.
+ */
+function cashpilotLimitarRequisicoesSessao(string $chave, int $maximo, int $janelaSegundos): bool
+{
+    $agora = time();
+    $bucket = $_SESSION['_cp_rate'][$chave] ?? [];
+    if (!is_array($bucket)) {
+        $bucket = [];
+    }
+
+    $bucket = array_values(
+        array_filter($bucket, static fn($ts): bool => is_int($ts) && $ts > $agora - $janelaSegundos)
+    );
+
+    if (count($bucket) >= $maximo) {
+        $_SESSION['_cp_rate'][$chave] = $bucket;
+        return false;
+    }
+
+    $bucket[] = $agora;
+    $_SESSION['_cp_rate'][$chave] = $bucket;
+    return true;
+}
+
 function mesAbreviadoPt(string $data): string
 {
-    $meses = [1=>'JAN',2=>'FEV',3=>'MAR',4=>'ABR',5=>'MAI',6=>'JUN',7=>'JUL',8=>'AGO',9=>'SET',10=>'OUT',11=>'NOV',12=>'DEZ'];
+    $meses = [
+        1 => 'JAN',
+        2 => 'FEV',
+        3 => 'MAR',
+        4 => 'ABR',
+        5 => 'MAI',
+        6 => 'JUN',
+        7 => 'JUL',
+        8 => 'AGO',
+        9 => 'SET',
+        10 => 'OUT',
+        11 => 'NOV',
+        12 => 'DEZ'
+    ];
     return $meses[(int) date('n', strtotime($data))] ?? '';
 }
 
 function mesAnoPt(string $data): string
 {
-    $meses = [1=>'janeiro',2=>'fevereiro',3=>'março',4=>'abril',5=>'maio',6=>'junho',7=>'julho',8=>'agosto',9=>'setembro',10=>'outubro',11=>'novembro',12=>'dezembro'];
+    $meses = [
+        1 => 'janeiro',
+        2 => 'fevereiro',
+        3 => 'março',
+        4 => 'abril',
+        5 => 'maio',
+        6 => 'junho',
+        7 => 'julho',
+        8 => 'agosto',
+        9 => 'setembro',
+        10 => 'outubro',
+        11 => 'novembro',
+        12 => 'dezembro'
+    ];
     $ts = strtotime($data);
     return ($meses[(int) date('n', $ts)] ?? '') . ' de ' . date('Y', $ts);
 }

@@ -1,0 +1,12 @@
+{
+  "name": "CashPilot",
+  "short_name": "CashPilot",
+  "start_url": "../../",
+  "display": "standalone",
+  "background_color": "#f5f6f3",
+  "theme_color": "#315e59",
+  "icons": [
+    {"src":"favicon-32x32.png","sizes":"32x32","type":"image/png"},
+    {"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png"}
+  ]
+}

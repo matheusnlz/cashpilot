@@ -1,25 +1,15 @@
 <?php
 
 function caminhoPythonCashPilot(): string
- {
+{
+    $configurado = getenv('CASHPILOT_PYTHON_PATH');
 
-        $configurado = getenv('CASHPILOT_PYTHON_PATH');
-
-        if (
-            is_string($configurado) &&
-            trim($configurado) !== ''
-        ) {
-
-                return trim($configurado);
-
+    if (is_string($configurado) && trim($configurado) !== '') {
+        return trim($configurado);
     }
 
-        return PHP_OS_FAMILY === 'Windows'
-            ? 'python'
-            : 'python3';
-
+    return PHP_OS_FAMILY === 'Windows' ? 'python' : 'python3';
 }
-
 
 /**
  * Executa um processo local sem passar por um shell.
@@ -36,7 +26,7 @@ function executarProcessoCashPilot(
         [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
-            2 => ['pipe', 'w'],
+            2 => ['pipe', 'w']
         ],
         $pipes,
         $diretorio
@@ -48,7 +38,7 @@ function executarProcessoCashPilot(
             'status' => -1,
             'stdout' => '',
             'stderr' => 'Não foi possível iniciar o processo local.',
-            'timeout' => false,
+            'timeout' => false
         ];
     }
 
@@ -76,7 +66,7 @@ function executarProcessoCashPilot(
             break;
         }
 
-        if ((microtime(true) - $inicio) >= max(1, $timeoutSegundos)) {
+        if (microtime(true) - $inicio >= max(1, $timeoutSegundos)) {
             $timeout = true;
             proc_terminate($processo);
             usleep(150000);
@@ -98,10 +88,10 @@ function executarProcessoCashPilot(
 
     $codigo = proc_close($processo);
     if (
-        $codigo === -1
-        && is_array($ultimoStatus)
-        && isset($ultimoStatus['exitcode'])
-        && (int) $ultimoStatus['exitcode'] >= 0
+        $codigo === -1 &&
+        is_array($ultimoStatus) &&
+        isset($ultimoStatus['exitcode']) &&
+        (int) $ultimoStatus['exitcode'] >= 0
     ) {
         $codigo = (int) $ultimoStatus['exitcode'];
     }
@@ -111,6 +101,6 @@ function executarProcessoCashPilot(
         'status' => $codigo,
         'stdout' => $stdout,
         'stderr' => $stderr,
-        'timeout' => $timeout,
+        'timeout' => $timeout
     ];
 }

@@ -30,4 +30,10 @@ def conectar():
         "use_unicode": True,
     }
 
-    return mysql.connector.connect(**config)
+    conexao = mysql.connector.connect(**config)
+    cursor = conexao.cursor()
+    try:
+        cursor.execute("SET time_zone = '-03:00'")
+    finally:
+        cursor.close()
+    return conexao

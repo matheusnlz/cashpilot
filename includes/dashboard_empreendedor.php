@@ -10,7 +10,7 @@ cpSincronizarCustosRecorrentesMes($pdo, $usuarioId);
 $inicio = date('Y-m-01');
 $fim = date('Y-m-t');
 $inicioAnterior = date('Y-m-01', strtotime('first day of last month'));
-$fimAnterior = date('Y-m-t', strtotime('last day of last month'));
+$fimAnterior = cpFimComparacaoMesAnterior();
 
 $stmt = $pdo->prepare(
     'SELECT nome, nicho
@@ -19,7 +19,7 @@ $stmt = $pdo->prepare(
 );
 
 $stmt->execute([
-    'uid' => $usuarioId,
+    'uid' => $usuarioId
 ]);
 
 $usuarioEmpreendedor = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
@@ -29,23 +29,9 @@ $perfil = cpPerfilNegocio($pdo, $usuarioId);
 $perfilPersonalizado = cpPerfilEmpreendedor($pdo, $usuarioId);
 $focoEmpreendedor = cpFocoEmpreendedor($perfilPersonalizado);
 
-$faturamento = cpTotalPeriodo(
-    $pdo,
-    'receitas',
-    'data_receita',
-    $usuarioId,
-    $inicio,
-    $fim
-);
+$faturamento = cpTotalPeriodo($pdo, 'receitas', 'data_receita', $usuarioId, $inicio, $fim);
 
-$despesas = cpTotalPeriodo(
-    $pdo,
-    'despesas',
-    'data_despesa',
-    $usuarioId,
-    $inicio,
-    $fim
-);
+$despesas = cpTotalPeriodo($pdo, 'despesas', 'data_despesa', $usuarioId, $inicio, $fim);
 
 $faturamentoAnterior = cpTotalPeriodo(
     $pdo,
@@ -67,69 +53,66 @@ $despesasAnterior = cpTotalPeriodo(
 
 $resultado = $faturamento - $despesas;
 
-$vendas = cpResumoVendas(
-    $pdo,
-    $usuarioId,
-    $inicio,
-    $fim
-);
+$vendas = cpResumoVendas($pdo, $usuarioId, $inicio, $fim);
 
-$compromissos = cpCompromissosMensais(
-    $pdo,
-    $usuarioId
-);
+$compromissos = cpCompromissosMensais($pdo, $usuarioId);
 
-$previsaoCaixa = cp14ProjecaoCaixaDetalhada(
-    $pdo,
-    $usuarioId,
-    30
-);
+$previsaoCaixa = cp14ProjecaoCaixaDetalhada($pdo, $usuarioId, 30);
 
 $mensal = cpDadosMensais($pdo, $usuarioId, 12);
 $diario = cpDadosDiariosMes($pdo, $usuarioId);
 
 $stmt = $pdo->prepare(
     'SELECT
-        nome,
-        estoque_atual,
-        estoque_minimo
-     FROM produtos_servicos
-     WHERE usuario_id = :uid
-       AND ativo = 1
-       AND tipo = "produto"
-       AND controlar_estoque = 1
-       AND estoque_atual <= estoque_minimo
-     ORDER BY estoque_atual
-     LIMIT 5'
+            nome,
+            estoque_atual,
+            estoque_minimo
+        FROM
+            produtos_servicos
+        WHERE
+            usuario_id = :uid
+            AND ativo = 1
+            AND tipo = "produto"
+            AND controlar_estoque = 1
+            AND estoque_atual <= estoque_minimo
+        ORDER BY
+            estoque_atual
+        LIMIT
+            5'
 );
 
 $stmt->execute([
-    'uid' => $usuarioId,
+    'uid' => $usuarioId
 ]);
 
 $estoqueBaixo = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $stmt = $pdo->prepare(
     'SELECT
-        vi.nome_item,
-        SUM(vi.quantidade) AS quantidade,
-        SUM(vi.preco_unitario * vi.quantidade) AS faturamento,
-        SUM(
-            (vi.preco_unitario - vi.custo_unitario) * vi.quantidade
-        ) AS lucro
-     FROM venda_itens vi
-     JOIN vendas v ON v.id = vi.venda_id
-     WHERE v.usuario_id = :uid
-       AND v.data_venda BETWEEN :inicio AND :fim
-     GROUP BY vi.nome_item
-     ORDER BY faturamento DESC
-     LIMIT 3'
+            vi.nome_item,
+            SUM(vi.quantidade) AS quantidade,
+            SUM(vi.preco_unitario * vi.quantidade) AS faturamento,
+            SUM(
+                (vi.preco_unitario - vi.custo_unitario) * vi.quantidade
+            ) AS lucro
+        FROM
+            venda_itens vi
+            JOIN vendas v ON v.id = vi.venda_id
+        WHERE
+            v.usuario_id = :uid
+            AND v.data_venda BETWEEN :inicio AND :fim
+        GROUP BY
+            vi.nome_item
+        ORDER BY
+            faturamento DESC
+        LIMIT
+            3'
 );
 
 $stmt->execute([
     'uid' => $usuarioId,
     'inicio' => $inicio,
-    'fim' => $fim,
+    'fim' => $fim
 ]);
 
 $topItens = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -139,76 +122,62 @@ $ate = date('Y-m-d', strtotime('+15 days'));
 
 $stmt = $pdo->prepare(
     'SELECT
-        descricao,
-        valor,
-        data_despesa,
-        origem_tipo
-     FROM despesas
-     WHERE usuario_id = :uid
-       AND data_despesa BETWEEN :inicio AND :fim
-       AND origem_tipo <> "manual"
-     ORDER BY data_despesa
-     LIMIT 8'
+            descricao,
+            valor,
+            data_despesa,
+            origem_tipo
+        FROM
+            despesas
+        WHERE
+            usuario_id = :uid
+            AND data_despesa BETWEEN :inicio AND :fim
+            AND origem_tipo <> "manual"
+        ORDER BY
+            data_despesa
+        LIMIT
+            8'
 );
 
 $stmt->execute([
     'uid' => $usuarioId,
     'inicio' => $hoje,
-    'fim' => $ate,
+    'fim' => $ate
 ]);
 
 $proximosCompromissos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $radar = [];
 
-$variacaoDespesas = $despesasAnterior > 0
-    ? (($despesas - $despesasAnterior) / $despesasAnterior) * 100
-    : null;
+$variacaoDespesas =
+    $despesasAnterior > 0 ? (($despesas - $despesasAnterior) / $despesasAnterior) * 100 : null;
 
-if (
-    $faturamento > 0 &&
-    ($compromissos['total'] / $faturamento) > 0.55
-) {
+if ($faturamento > 0 && $compromissos['total'] / $faturamento > 0.55) {
     $radar[] = [
         'vermelho',
         'Estrutura recorrente pesada',
         'Compromissos mensais representam ' .
-        number_format(
-            ($compromissos['total'] / $faturamento) * 100,
-            0
-        ) .
-        '% do faturamento atual.',
+        number_format(($compromissos['total'] / $faturamento) * 100, 0) .
+        '% do faturamento atual.'
     ];
 }
 
-if (
-    $variacaoDespesas !== null &&
-    $variacaoDespesas > 15
-) {
+if ($variacaoDespesas !== null && $variacaoDespesas > 15) {
     $radar[] = [
         'amarelo',
         'Custos aceleraram',
         'As despesas cresceram ' .
         number_format($variacaoDespesas, 1, ',', '.') .
-        '% contra o mês anterior.',
+        '% contra o mês anterior.'
     ];
 }
 
-if (
-    $vendas['receita_vendas'] > 0 &&
-    $vendas['margem_bruta'] < 25
-) {
+if ($vendas['receita_vendas'] > 0 && $vendas['margem_bruta'] < 25) {
     $radar[] = [
         'amarelo',
         'Margem sob atenção',
         'A margem bruta das vendas está em ' .
-        number_format(
-            $vendas['margem_bruta'],
-            1,
-            ',',
-            '.'
-        ) .
-        '%.',
+        number_format($vendas['margem_bruta'], 1, ',', '.') .
+        '%.'
     ];
 }
 
@@ -216,8 +185,7 @@ if ($estoqueBaixo) {
     $radar[] = [
         'amarelo',
         'Estoque precisa de atenção',
-        count($estoqueBaixo) .
-        ' produto(s) chegaram ao estoque mínimo.',
+        count($estoqueBaixo) . ' produto(s) chegaram ao estoque mínimo.'
     ];
 }
 
@@ -225,9 +193,7 @@ if ($resultado < 0) {
     $radar[] = [
         'vermelho',
         'Resultado negativo',
-        'As saídas superam as entradas em ' .
-        formatarMoeda(abs($resultado)) .
-        '.',
+        'As saídas superam as entradas em ' . formatarMoeda(abs($resultado)) . '.'
     ];
 }
 
@@ -236,47 +202,45 @@ $kpis = [
         'rotulo' => 'Faturamento',
         'valor' => formatarMoeda($faturamento),
         'classe' => '',
-        'detalhe' => $faturamentoAnterior > 0
-            ? (
-                ($faturamento - $faturamentoAnterior >= 0 ? '↑ ' : '↓ ') .
-                number_format(
-                    abs(
-                        ($faturamento - $faturamentoAnterior) /
-                        $faturamentoAnterior *
-                        100
-                    ),
-                    1,
-                    ',',
-                    '.'
-                ) .
-                '% vs. mês anterior'
-            )
-            : 'Sem base anterior',
+        'detalhe' =>
+            $faturamentoAnterior > 0
+                ? ($faturamento - $faturamentoAnterior >= 0 ? '↑ ' : '↓ ') .
+                    number_format(
+                        abs((($faturamento - $faturamentoAnterior) / $faturamentoAnterior) * 100),
+                        1,
+                        ',',
+                        '.'
+                    ) .
+                    '% vs. mês anterior'
+                : 'Sem base anterior'
     ],
     'resultado' => [
         'rotulo' => 'Resultado',
         'valor' => formatarMoeda($resultado),
         'classe' => $resultado >= 0 ? 'positivo' : 'negativo',
-        'detalhe' => 'Receitas menos despesas',
+        'detalhe' => 'Receitas menos despesas'
     ],
     'margem' => [
         'rotulo' => 'Margem bruta',
-        'valor' => (int) $vendas['vendas'] > 0 && (float) $vendas['receita_vendas'] > 0
-            ? number_format((float) $vendas['margem_bruta'], 1, ',', '.') . '%'
-            : 'Dados insuficientes',
+        'valor' =>
+            (int) $vendas['vendas'] > 0 && (float) $vendas['receita_vendas'] > 0
+                ? number_format((float) $vendas['margem_bruta'], 1, ',', '.') . '%'
+                : 'Dados insuficientes',
         'classe' => (int) $vendas['vendas'] > 0 ? '' : 'dados-insuficientes',
-        'detalhe' => (int) $vendas['vendas'] > 0
-            ? 'Nas vendas vinculadas'
-            : 'Registre vendas e custos para calcular',
+        'detalhe' =>
+            (int) $vendas['vendas'] > 0
+                ? 'Nas vendas vinculadas'
+                : 'Registre vendas e custos para calcular'
     ],
     'vendas' => [
         'rotulo' => 'Vendas',
         'valor' => (string) $vendas['vendas'],
         'classe' => '',
-        'detalhe' => (int) $vendas['vendas'] > 0
-            ? 'Ticket médio ' . formatarMoeda((float) $vendas['ticket_medio'])
-            : 'Sem vendas suficientes para calcular ticket',
-    ],
+        'detalhe' =>
+            (int) $vendas['vendas'] > 0
+                ? 'Ticket médio ' . formatarMoeda((float) $vendas['ticket_medio'])
+                : 'Sem vendas suficientes para calcular ticket'
+    ]
 ];
 
 $ordemKpis = ['faturamento', 'resultado', 'margem', 'vendas'];
@@ -284,10 +248,7 @@ $objetivoNormalizado = cpTextoNormalizado(
     (string) ($perfilPersonalizado['objetivo_principal'] ?? '')
 );
 
-if (
-    str_contains($objetivoNormalizado, 'margem') ||
-    str_contains($objetivoNormalizado, 'lucro')
-) {
+if (str_contains($objetivoNormalizado, 'margem') || str_contains($objetivoNormalizado, 'lucro')) {
     $ordemKpis = ['margem', 'resultado', 'faturamento', 'vendas'];
 } elseif (
     str_contains($objetivoNormalizado, 'venda') ||
@@ -301,20 +262,22 @@ if (
 ) {
     $ordemKpis = ['resultado', 'faturamento', 'margem', 'vendas'];
 }
+
+$saldoAtualEmpreendedor = cpSaldoGeral($pdo, $usuarioId);
+$patrimonioEmpreendedor = $saldoAtualEmpreendedor;
 ?>
+
 
 <div class="page-head dashboard-head">
     <div>
         <span class="eyebrow">
             ÁREA DO EMPREENDEDOR ·
             <?= limpar(mb_strtoupper($nicho)) ?>
-        </span>
+             </span>
 
         <h1>
-            <?= limpar(
-                $perfil['nome_negocio'] ?? 'Visão do negócio'
-            ) ?>
-        </h1>
+            <?= limpar($perfil['nome_negocio'] ?? 'Visão do negócio') ?>
+             </h1>
 
         <p>
             Faturamento, operação e compromissos em uma visão executiva
@@ -324,15 +287,32 @@ if (
 
     <div class="cp14-head-actions">
         <a href="visao_financeira.php" class="btn btn-secundario">Visão Financeira</a>
-        <button
-            class="btn btn-secundario"
-            data-copiloto-pergunta="Analise meu negócio atual considerando meu nicho, público, objetivo principal, faturamento, resultado, margem, vendas, estoque e compromissos. Diga o principal ponto de atenção."
-        >
-            ✦ Explicar meu negócio
+        <button class="btn btn-secundario"
+            data-copiloto-pergunta="Analise meu negócio atual considerando meu nicho, público, objetivo principal, faturamento, resultado, margem, vendas, estoque e compromissos. Diga o principal ponto de atenção.">
+            <?= cpIcon('copilot', 'cp-icon-inline') ?> Explicar meu negócio
         </button>
     </div>
 </div>
 
+<section class="cp154-wealth-overview cp154-business-wealth">
+    <article class="cp154-balance-hero">
+        <span>SALDO ATUAL DO NEGÓCIO</span>
+        <strong class="<?= $saldoAtualEmpreendedor >= 0
+        ? 'positivo'
+        : 'negativo' ?>"><?= formatarMoeda($saldoAtualEmpreendedor) ?></strong>
+        <small>Saldo inicial das contas mais entradas e saídas efetivadas até hoje, sem zerar na
+            troca do mês.</small>
+    </article>
+    <article class="cp154-patrimony-hero">
+        <span>PATRIMÔNIO FINANCEIRO ACOMPANHADO</span>
+        <strong><?= formatarMoeda($patrimonioEmpreendedor) ?></strong>
+        <small>Hoje considera o caixa financeiro registrado. Estoque e outros ativos físicos não
+            entram neste valor.</small>
+    </article>
+</section>
+<section class="cp154-month-label"><span>DESEMPENHO DO MÊS</span>
+    <p>Os indicadores abaixo continuam mostrando apenas o período atual.</p>
+</section>
 <section class="surface-card business-focus-card">
     <div>
         <span class="eyebrow">
@@ -341,11 +321,11 @@ if (
 
         <h2>
             <?= limpar($focoEmpreendedor['titulo']) ?>
-        </h2>
+             </h2>
 
         <p>
             <?= limpar($focoEmpreendedor['descricao']) ?>
-        </p>
+             </p>
     </div>
 
     <a href="negocio.php" class="link-limpar">
@@ -354,23 +334,30 @@ if (
 </section>
 
 <section class="business-kpis">
+
     <?php foreach ($ordemKpis as $chave): ?>
-        <?php $kpi = $kpis[$chave]; ?>
 
-        <article>
-            <span>
-                <?= limpar($kpi['rotulo']) ?>
-            </span>
 
-            <strong class="<?= limpar($kpi['classe']) ?>">
-                <?= limpar($kpi['valor']) ?>
-            </strong>
+    <?php $kpi = $kpis[$chave]; ?>
 
-            <small>
-                <?= limpar($kpi['detalhe']) ?>
-            </small>
-        </article>
+
+    <article>
+        <span>
+            <?= limpar($kpi['rotulo']) ?>
+             </span>
+
+        <strong class="<?= limpar($kpi['classe']) ?>">
+            <?= limpar($kpi['valor']) ?>
+             </strong>
+
+        <small>
+            <?= limpar($kpi['detalhe']) ?>
+             </small>
+    </article>
+
     <?php endforeach; ?>
+
+
 </section>
 
 <div class="dashboard-grid-main">
@@ -405,64 +392,60 @@ if (
                 <h2>Compromissos</h2>
             </div>
 
-            <a
-                href="transacoes.php?visual=calendario"
-                class="link-limpar"
-            >
+            <a href="transacoes.php?visual=calendario" class="link-limpar">
                 Calendário →
             </a>
         </div>
 
         <?php if (!$proximosCompromissos): ?>
-            <p class="texto-vazio">
-                Nenhum compromisso automático nos próximos 15 dias.
-            </p>
+
+
+        <p class="texto-vazio">
+            Nenhum compromisso automático nos próximos 15 dias.
+        </p>
+
         <?php else: ?>
-            <div class="upcoming-list">
-                <?php foreach ($proximosCompromissos as $compromisso): ?>
-                    <div>
-                        <div class="date-chip">
-                            <b>
-                                <?= date(
-                                    'd',
-                                    strtotime($compromisso['data_despesa'])
-                                ) ?>
-                            </b>
 
-                            <small>
-                                <?= mesAbreviadoPt(
-                                    $compromisso['data_despesa']
-                                ) ?>
-                            </small>
-                        </div>
 
-                        <div>
-                            <strong>
-                                <?= limpar($compromisso['descricao']) ?>
-                            </strong>
+        <div class="upcoming-list">
 
-                            <small>
-                                <?= limpar(
-                                    ucfirst(
-                                        str_replace(
-                                            '_',
-                                            ' ',
-                                            $compromisso['origem_tipo']
-                                        )
-                                    )
-                                ) ?>
-                            </small>
-                        </div>
+            <?php foreach ($proximosCompromissos as $compromisso): ?>
 
-                        <strong>
-                            <?= formatarMoeda(
-                                (float) $compromisso['valor']
-                            ) ?>
-                        </strong>
-                    </div>
-                <?php endforeach; ?>
+
+            <div>
+                <div class="date-chip">
+                    <b>
+                        <?= date('d', strtotime($compromisso['data_despesa'])) ?>
+                         </b>
+
+                    <small>
+                        <?= mesAbreviadoPt($compromisso['data_despesa']) ?>
+                         </small>
+                </div>
+
+                <div>
+                    <strong>
+                        <?= limpar($compromisso['descricao']) ?>
+                         </strong>
+
+                    <small>
+                        <?= limpar(ucfirst(str_replace('_', ' ', $compromisso['origem_tipo']))) ?>
+                         </small>
+                </div>
+
+                <strong>
+                    <?= formatarMoeda((float) $compromisso['valor']) ?>
+                     </strong>
             </div>
+
+            <?php endforeach; ?>
+
+
+        </div>
+
         <?php endif; ?>
+
+
     </section>
 </div>
 
@@ -472,13 +455,9 @@ if (
             PREVISÃO DE CAIXA · 30 DIAS
         </span>
 
-        <h2 class="<?= $previsaoCaixa['caixa_projetado'] >= 0
-            ? 'positivo'
-            : 'negativo' ?>">
-            <?= formatarMoeda(
-                $previsaoCaixa['caixa_projetado']
-            ) ?>
-        </h2>
+        <h2 class="<?= $previsaoCaixa['caixa_projetado'] >= 0 ? 'positivo' : 'negativo' ?>">
+            <?= formatarMoeda($previsaoCaixa['caixa_projetado']) ?>
+             </h2>
 
         <p>
             Estimativa com média recente de receitas e compromissos já registrados.
@@ -504,32 +483,46 @@ if (
         </div>
 
         <?php if (!$estoqueBaixo): ?>
-            <div class="mini-empty success">
-                <p>
-                    Nenhum produto abaixo do estoque mínimo.
-                </p>
-            </div>
+
+
+        <div class="mini-empty success">
+            <p>
+                Nenhum produto abaixo do estoque mínimo.
+            </p>
+        </div>
+
         <?php else: ?>
-            <div class="stock-alert-list">
-                <?php foreach ($estoqueBaixo as $item): ?>
-                    <div>
-                        <span class="status-dot warning"></span>
 
-                        <div>
-                            <strong>
-                                <?= limpar($item['nome']) ?>
-                            </strong>
 
-                            <small>
-                                <?= (int) $item['estoque_atual'] ?>
-                                disponíveis · mínimo
-                                <?= (int) $item['estoque_minimo'] ?>
-                            </small>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+        <div class="stock-alert-list">
+
+            <?php foreach ($estoqueBaixo as $item): ?>
+
+
+            <div>
+                <span class="status-dot warning"></span>
+
+                <div>
+                    <strong>
+                        <?= limpar($item['nome']) ?>
+                         </strong>
+
+                    <small>
+                        <?= (int) $item['estoque_atual'] ?>
+                         disponíveis · mínimo
+                        <?= (int) $item['estoque_minimo'] ?>
+                         </small>
+                </div>
             </div>
+
+            <?php endforeach; ?>
+
+
+        </div>
+
         <?php endif; ?>
+
+
     </section>
 
     <section class="surface-card">
@@ -545,37 +538,49 @@ if (
         </div>
 
         <?php if (!$topItens): ?>
-            <p class="texto-vazio">
-                Registre vendas para identificar os destaques.
-            </p>
+
+
+        <p class="texto-vazio">
+            Registre vendas para identificar os destaques.
+        </p>
+
         <?php else: ?>
-            <div class="ranking-list">
-                <?php foreach ($topItens as $indice => $item): ?>
-                    <div>
-                        <span>
-                            <?= $indice + 1 ?>
-                        </span>
 
-                        <div>
-                            <strong>
-                                <?= limpar($item['nome_item']) ?>
-                            </strong>
 
-                            <small>
-                                <?= (int) $item['quantidade'] ?>
-                                vendido(s)
-                            </small>
-                        </div>
+        <div class="ranking-list">
 
-                        <strong>
-                            <?= formatarMoeda(
-                                (float) $item['faturamento']
-                            ) ?>
-                        </strong>
-                    </div>
-                <?php endforeach; ?>
+            <?php foreach ($topItens as $indice => $item): ?>
+
+
+            <div>
+                <span>
+                    <?= $indice + 1 ?>
+                     </span>
+
+                <div>
+                    <strong>
+                        <?= limpar($item['nome_item']) ?>
+                         </strong>
+
+                    <small>
+                        <?= (int) $item['quantidade'] ?>
+                         vendido(s)
+                    </small>
+                </div>
+
+                <strong>
+                    <?= formatarMoeda((float) $item['faturamento']) ?>
+                     </strong>
             </div>
+
+            <?php endforeach; ?>
+
+
+        </div>
+
         <?php endif; ?>
+
+
     </section>
 
     <section class="surface-card">
@@ -591,28 +596,42 @@ if (
         </div>
 
         <?php if (!$radar): ?>
-            <p class="texto-vazio">
-                Nenhum ponto crítico detectado.
-            </p>
+
+
+        <p class="texto-vazio">
+            Nenhum ponto crítico detectado.
+        </p>
+
         <?php else: ?>
-            <div class="radar-compact">
-                <?php foreach (array_slice($radar, 0, 3) as $alerta): ?>
-                    <div class="<?= limpar($alerta[0]) ?>">
-                        <i></i>
 
-                        <div>
-                            <strong>
-                                <?= limpar($alerta[1]) ?>
-                            </strong>
 
-                            <p>
-                                <?= limpar($alerta[2]) ?>
-                            </p>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+        <div class="radar-compact">
+
+            <?php foreach (array_slice($radar, 0, 3) as $alerta): ?>
+
+
+            <div class="<?= limpar($alerta[0]) ?>">
+                <i></i>
+
+                <div>
+                    <strong>
+                        <?= limpar($alerta[1]) ?>
+                         </strong>
+
+                    <p>
+                        <?= limpar($alerta[2]) ?>
+                         </p>
+                </div>
             </div>
+
+            <?php endforeach; ?>
+
+
+        </div>
+
         <?php endif; ?>
+
+
     </section>
 </div>
 
@@ -621,14 +640,9 @@ if (
 </script>
 
 <script>
-inicializarGraficoEvolucao({
-    mensal: <?= json_encode(
-        $mensal,
-        JSON_UNESCAPED_UNICODE
-    ) ?>,
-    diario: <?= json_encode(
-        $diario,
-        JSON_UNESCAPED_UNICODE
-    ) ?>
-});
+    inicializarGraficoEvolucao({
+        mensal: <?= json_encode($mensal, JSON_UNESCAPED_UNICODE) ?>,
+        diario: <?= json_encode($diario, JSON_UNESCAPED_UNICODE) ?>
+
+    });
 </script>
