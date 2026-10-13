@@ -59,19 +59,6 @@ function conectar(): PDO
     );
 }
 
-$diagnostico = $pdo->query(
-    'SELECT @@hostname AS servidor, DATABASE() AS banco'
-)->fetch(PDO::FETCH_ASSOC);
-
-error_log(
-    'CashPilot/DestinoDB: ' .
-    json_encode([
-        'host_configurado' => $host,
-        'porta' => (int) $porta,
-        'servidor' => $diagnostico['servidor'],
-        'banco' => $diagnostico['banco']
-    ], JSON_UNESCAPED_SLASHES)
-);
 
         return $pdo;
     } catch (PDOException $e) {
