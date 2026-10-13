@@ -1,15 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/ambiente.php';
-/**
- * CashPilot - Conexão PDO.
- *
- * Local/XAMPP:
- *   DB_HOST=localhost, DB_NAME=cashpilot, DB_USER=root, DB_PASS=""
- *
- * Railway:
- *   aceita diretamente MYSQLHOST, MYSQLPORT, MYSQLDATABASE,
- *   MYSQLUSER e MYSQLPASSWORD fornecidas pelo serviço MySQL.
- */
+
 
 function cashpilotEnvPrimeiro(array $nomes, string $padrao = ''): string
 {
@@ -46,6 +37,14 @@ function conectar(): PDO
             ';dbname=' .
             $nome .
             ';charset=utf8mb4';
+
+        $inicioConexao = microtime(true);
+        $pdo->exec("SET time_zone = '-03:00'");
+        error_log(
+        'CashPilot/TempoConexaoDB: ' .
+        round((microtime(true) - $inicioConexao) * 1000) .
+        ' ms'
+);
 
         $pdo = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
