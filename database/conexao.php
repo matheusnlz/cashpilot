@@ -51,6 +51,21 @@ function conectar(): PDO
             ' ms'
         );
 
+        // Diagnóstico temporário: mede três consultas simples.
+for ($teste = 1; $teste <= 3; $teste++) {
+    $inicioConsulta = microtime(true);
+
+    $consulta = $pdo->query('SELECT 1');
+    $consulta->fetchColumn();
+    $consulta->closeCursor();
+
+    error_log(
+        'CashPilot/TempoConsultaDB-' . $teste . ': ' .
+        round((microtime(true) - $inicioConsulta) * 1000) .
+        ' ms'
+    );
+}
+
         return $pdo;
     } catch (PDOException $e) {
         error_log('CashPilot/DB: ' . $e->getMessage());
