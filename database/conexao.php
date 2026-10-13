@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/ambiente.php';
 
-
 function cashpilotEnvPrimeiro(array $nomes, string $padrao = ''): string
 {
     foreach ($nomes as $nome) {
         $valor = getenv($nome);
+
         if (is_string($valor) && trim($valor) !== '') {
             return trim($valor);
         }
@@ -29,22 +29,12 @@ function conectar(): PDO
     $senha = cashpilotEnvPrimeiro(['DB_PASS', 'MYSQLPASSWORD'], '');
 
     try {
-        $dsn =
-            'mysql:host=' .
-            $host .
-            ';port=' .
-            (int) $porta .
-            ';dbname=' .
-            $nome .
+        $dsn = 'mysql:host=' . $host .
+            ';port=' . (int) $porta .
+            ';dbname=' . $nome .
             ';charset=utf8mb4';
 
         $inicioConexao = microtime(true);
-        $pdo->exec("SET time_zone = '-03:00'");
-        error_log(
-        'CashPilot/TempoConexaoDB: ' .
-        round((microtime(true) - $inicioConexao) * 1000) .
-        ' ms'
-);
 
         $pdo = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -52,8 +42,14 @@ function conectar(): PDO
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_STRINGIFY_FETCHES => false
         ]);
-        // Mantém CURRENT_DATE() coerente com as datas financeiras do usuário brasileiro.
+
         $pdo->exec("SET time_zone = '-03:00'");
+
+        error_log(
+            'CashPilot/TempoConexaoDB: ' .
+            round((microtime(true) - $inicioConexao) * 1000) .
+            ' ms'
+        );
 
         return $pdo;
     } catch (PDOException $e) {
