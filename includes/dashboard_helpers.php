@@ -16,31 +16,55 @@ function cpTotalPeriodo(
 
 function cpDadosMensais(PDO $pdo, int $uid, int $meses = 12): array
 {
-    $dados = [];
+    if ($meses <= 0) {
+        return [];
+    }
 
+    $dados = [];
+    $indices = [];
     for ($i = $meses - 1; $i >= 0; $i--) {
         $ref = new DateTime("first day of -{$i} month");
-
-        $dados[] = [
-            'mes' => $ref->format('Y-m'),
-            'receitas' => cpTotalPeriodo(
-                $pdo,
-                'receitas',
-                'data_receita',
-                $uid,
-                $ref->format('Y-m-01'),
-                $ref->format('Y-m-t')
-            ),
-            'despesas' => cpTotalPeriodo(
-                $pdo,
-                'despesas',
-                'data_despesa',
-                $uid,
-                $ref->format('Y-m-01'),
-                $ref->format('Y-m-t')
-            )
-        ];
+        $mes = $ref->format('Y-m');
+        $indices[$mes] = count($dados);
+        $dados[] = ['mes' => $mes, 'receitas' => 0.0, 'despesas' => 0.0];
     }
+
+    $inicio = $dados[0]['mes'] . '-01';
+    $hoje = date('Y-m-d');
+
+    // Uma consulta para toda a serie, mantendo as regras de caixa realizado.
+    // Parametros distintos sao necessarios para preparacao nativa do PDO.
+    $stmt = $pdo->prepare(
+        "SELECT DATE_FORMAT(data_receita, '%Y-%m') AS mes,
+                'receitas' AS tipo, SUM(valor) AS total
+         FROM receitas
+         WHERE usuario_id = :uid_receitas AND status = 'efetivado'
+           AND data_receita BETWEEN :inicio_receitas AND :fim_receitas
+         GROUP BY DATE_FORMAT(data_receita, '%Y-%m')
+         UNION ALL
+         SELECT DATE_FORMAT(data_despesa, '%Y-%m') AS mes,
+                'despesas' AS tipo, SUM(valor) AS total
+         FROM despesas
+         WHERE usuario_id = :uid_despesas AND status = 'efetivado'
+           AND data_despesa BETWEEN :inicio_despesas AND :fim_despesas
+         GROUP BY DATE_FORMAT(data_despesa, '%Y-%m')"
+    );
+    $stmt->execute([
+        'uid_receitas' => $uid,
+        'inicio_receitas' => $inicio,
+        'fim_receitas' => $hoje,
+        'uid_despesas' => $uid,
+        'inicio_despesas' => $inicio,
+        'fim_despesas' => $hoje
+    ]);
+
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $linha) {
+        $mes = (string) $linha['mes'];
+        if (isset($indices[$mes])) {
+            $dados[$indices[$mes]][$linha['tipo']] = round((float) $linha['total'], 2);
+        }
+    }
+    $stmt->closeCursor();
 
     return $dados;
 }
