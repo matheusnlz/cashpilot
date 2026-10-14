@@ -34,8 +34,6 @@ function conectar(): PDO
             ';dbname=' . $nome .
             ';charset=utf8mb4';
 
-        $inicioConexao = microtime(true);
-
         $pdo = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -44,21 +42,6 @@ function conectar(): PDO
         ]);
 
         $pdo->exec("SET time_zone = '-03:00'");
-
-        error_log(
-            'CashPilot/TempoConexaoDB: ' .
-            round((microtime(true) - $inicioConexao) * 1000) .
-            ' ms'
-        );
-
-
-    error_log(
-        'CashPilot/TempoConsultaDB-' . $teste . ': ' .
-        round((microtime(true) - $inicioConsulta) * 1000) .
-        ' ms'
-    );
-}
-
 
         return $pdo;
     } catch (PDOException $e) {
