@@ -10,7 +10,7 @@ require_once __DIR__ . '/financeiro_regras.php';
 function cp14TabelaExiste(PDO $pdo, string $tabela): bool
 {
     try {
-        $stmt = $pdo->prepare(
+        $stmt = cpPrepararConsultaReutilizavel($pdo, 
             'SELECT
                     COUNT(*)
                 FROM
@@ -47,7 +47,7 @@ function cp14ResumoInvestimentos(PDO $pdo, int $usuarioId): array
     }
 
     try {
-        $stmt = $pdo->prepare(
+        $stmt = cpPrepararConsultaReutilizavel($pdo, 
             'SELECT
                     COUNT(*) AS quantidade,
                     COALESCE(SUM(valor_aplicado), 0) AS aplicado,
@@ -77,7 +77,7 @@ function cp14ResumoInvestimentos(PDO $pdo, int $usuarioId): array
             $resumo['rentabilidade'] = ($resumo['resultado'] / $resumo['valor_aplicado']) * 100;
         }
 
-        $stmt = $pdo->prepare(
+        $stmt = cpPrepararConsultaReutilizavel($pdo, 
             'SELECT
                     classe,
                     COUNT(*) AS quantidade,
@@ -113,7 +113,7 @@ function cp14ResumoInvestimentos(PDO $pdo, int $usuarioId): array
         $resumo['classes'] = $classes;
 
         if (cp14TabelaExiste($pdo, 'investimento_movimentacoes')) {
-            $stmt = $pdo->prepare(
+            $stmt = cpPrepararConsultaReutilizavel($pdo, 
                 'SELECT
                         COALESCE(SUM(valor), 0)
                     FROM

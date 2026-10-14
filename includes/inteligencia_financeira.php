@@ -16,7 +16,7 @@ function cpIFMediaDespesasEssenciais(PDO $pdo, int $uid, int $meses = 3): float
     $inicio = date('Y-m-01', strtotime('-' . max(0, $meses - 1) . ' months'));
     $fim = date('Y-m-t');
 
-    $s = $pdo->prepare('SELECT
+    $s = cpPrepararConsultaReutilizavel($pdo, 'SELECT
             COALESCE(SUM(d.valor), 0) total
         FROM
             despesas d
@@ -43,7 +43,7 @@ function cpIFMediaDespesasEssenciais(PDO $pdo, int $uid, int $meses = 3): float
 
 function cpReservaResumo(PDO $pdo, int $uid): array
 {
-    $s = $pdo->prepare(
+    $s = cpPrepararConsultaReutilizavel($pdo, 
         'SELECT valor_atual,meses_objetivo FROM reserva_emergencia WHERE usuario_id=:uid'
     );
     $s->execute(['uid' => $uid]);

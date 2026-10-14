@@ -28,6 +28,13 @@ function conectar(): PDO
     $usuario = cashpilotEnvPrimeiro(['DB_USER', 'MYSQLUSER'], 'root');
     $senha = cashpilotEnvPrimeiro(['DB_PASS', 'MYSQLPASSWORD'], '');
 
+    if (cpPerfAtivo()) {
+        $regiao = preg_replace('/[^a-zA-Z0-9_-]/', '_', (string) (getenv('RAILWAY_REPLICA_REGION') ?: 'nao_informada'));
+        $tipoHost = str_ends_with($host, '.railway.internal') ? 'privado_railway' : 'outro';
+        $origemHost = trim((string) getenv('DB_HOST')) !== '' ? 'DB_HOST' : (trim((string) getenv('MYSQLHOST')) !== '' ? 'MYSQLHOST' : 'padrao');
+        cpPerfLog('ambiente regiao_aplicacao=' . $regiao . ' host_tipo=' . $tipoHost . ' host_variavel=' . $origemHost);
+    }
+
     try {
         $dsn = 'mysql:host=' . $host .
             ';port=' . (int) $porta .
