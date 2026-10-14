@@ -1,12 +1,15 @@
 <?php
+cpPerfEtapa('pf_carregar_helpers');
 require_once __DIR__ . '/pf_financeiro.php';
 
 require_once __DIR__ . '/inteligencia_financeira.php';
 
 require_once __DIR__ . '/cashpilot14_financeiro.php';
 
+cpPerfEtapa('pf_sincronizar_recorrencias');
 cpSincronizarRecorrenciasPF($pdo, $usuarioId);
 
+cpPerfEtapa('pf_totais_periodos');
 $inicio = date('Y-m-01');
 $fim = date('Y-m-t');
 $ia = date('Y-m-01', strtotime('first day of last month'));
@@ -21,19 +24,29 @@ $receitasAnt = cpTotalPeriodo($pdo, 'receitas', 'data_receita', $usuarioId, $ia,
 $despesasAnt = cpTotalPeriodo($pdo, 'despesas', 'data_despesa', $usuarioId, $ia, $fa);
 
 $resultado = $receitas - $despesas;
+cpPerfEtapa('pf_saldo');
 $saldo = cpSaldoGeral($pdo, $usuarioId);
 
+cpPerfEtapa('pf_grafico_mensal');
 $mensal = cpDadosMensais($pdo, $usuarioId, 12);
+cpPerfEtapa('pf_grafico_diario');
 $diario = cpDadosDiariosMes($pdo, $usuarioId);
 
+cpPerfEtapa('pf_categorias');
 $cats = cpCategoriasDespesas($pdo, $usuarioId, $inicio, $fim, 5);
+cpPerfEtapa('pf_resumo_recorrencias');
 $rec = cpResumoRecorrenciasPF($pdo, $usuarioId);
+cpPerfEtapa('pf_cashscore');
 $cashScoreDash = cpCashScore($pdo, $usuarioId);
+cpPerfEtapa('pf_patrimonio');
 $patrimonio14 = cp14PatrimonioPF($pdo, $usuarioId);
+cpPerfEtapa('pf_investimentos');
 $investimentos14 = cp14ResumoInvestimentos($pdo, $usuarioId);
+cpPerfEtapa('pf_reserva');
 $reservaDashboard = cpReservaResumo($pdo, $usuarioId);
 $patrimonioTotalDashboard = $patrimonio14['patrimonio_acompanhado'];
 
+cpPerfEtapa('pf_planejamento');
 $planejamentoDash = cp14ResumoPlanejamento($pdo, $usuarioId, date('Y-m'));
 
 $orc = [];
@@ -55,6 +68,7 @@ foreach ($planejamentoDash['categorias'] as $catPlano) {
     $gastoLimite += (float) $catPlano['realizado'];
 }
 
+cpPerfEtapa('pf_metas');
 $s = $pdo->prepare(
     'SELECT
             titulo,
@@ -75,12 +89,14 @@ $s = $pdo->prepare(
 $s->execute(['uid' => $usuarioId]);
 $metas = $s->fetchAll(PDO::FETCH_ASSOC);
 
+cpPerfEtapa('pf_proximos_pagamentos');
 $s = $pdo->prepare(
     'SELECT * FROM recorrencias_pf WHERE usuario_id=:uid AND ativo=1 ORDER BY proxima_data LIMIT 6'
 );
 $s->execute(['uid' => $usuarioId]);
 $proximos = $s->fetchAll(PDO::FETCH_ASSOC);
 
+cpPerfEtapa('pf_renderizar');
 $varD = $despesasAnt > 0 ? (($despesas - $despesasAnt) / $despesasAnt) * 100 : null;
 
 $horaAtual = (int) date('G');

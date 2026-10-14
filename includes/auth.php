@@ -74,7 +74,7 @@ if (PHP_SAPI !== 'cli') {
             'httponly' => true,
             'samesite' => 'Lax'
         ]);
-        session_start();
+        cpPerfMedir('sessao', fn() => session_start());
     }
 
     // Cabeçalhos compatíveis com a interface atual. CSP fica para produção,
@@ -112,7 +112,7 @@ if (PHP_SAPI !== 'cli') {
         $_SESSION = [];
         cashpilotRemoverCookieSessao();
         session_destroy();
-        session_start();
+        cpPerfMedir('sessao', fn() => session_start());
     }
     $_SESSION['_cp_ultima_atividade'] = $agora;
     if (!empty($_SESSION['usuario_id'])) {
@@ -120,7 +120,7 @@ if (PHP_SAPI !== 'cli') {
             $_SESSION = [];
             cashpilotRemoverCookieSessao();
             session_destroy();
-            session_start();
+            cpPerfMedir('sessao', fn() => session_start());
             $_SESSION['erro_login'] = 'Sua sessão foi encerrada por segurança. Entre novamente.';
             $prefixo = str_contains((string) ($_SERVER['PHP_SELF'] ?? ''), '/actions/')
                 ? '../pages/'

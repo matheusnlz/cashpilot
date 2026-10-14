@@ -1,12 +1,15 @@
 <?php
 
+cpPerfEtapa('mei_carregar_helpers');
 require_once __DIR__ . '/negocio_financeiro.php';
 require_once __DIR__ . '/inteligencia_financeira.php';
 require_once __DIR__ . '/personalizacao.php';
 require_once __DIR__ . '/cashpilot14_financeiro.php';
 
+cpPerfEtapa('mei_sincronizar_recorrencias');
 cpSincronizarCustosRecorrentesMes($pdo, $usuarioId);
 
+cpPerfEtapa('mei_dados_usuario');
 $inicio = date('Y-m-01');
 $fim = date('Y-m-t');
 $inicioAnterior = date('Y-m-01', strtotime('first day of last month'));
@@ -25,10 +28,13 @@ $stmt->execute([
 $usuarioEmpreendedor = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 $nicho = $usuarioEmpreendedor['nicho'] ?? 'Negócio';
 
+cpPerfEtapa('mei_perfil_negocio');
 $perfil = cpPerfilNegocio($pdo, $usuarioId);
+cpPerfEtapa('mei_personalizacao');
 $perfilPersonalizado = cpPerfilEmpreendedor($pdo, $usuarioId);
 $focoEmpreendedor = cpFocoEmpreendedor($perfilPersonalizado);
 
+cpPerfEtapa('mei_totais_periodos');
 $faturamento = cpTotalPeriodo($pdo, 'receitas', 'data_receita', $usuarioId, $inicio, $fim);
 
 $despesas = cpTotalPeriodo($pdo, 'despesas', 'data_despesa', $usuarioId, $inicio, $fim);
@@ -53,15 +59,21 @@ $despesasAnterior = cpTotalPeriodo(
 
 $resultado = $faturamento - $despesas;
 
+cpPerfEtapa('mei_resumo_vendas');
 $vendas = cpResumoVendas($pdo, $usuarioId, $inicio, $fim);
 
+cpPerfEtapa('mei_compromissos');
 $compromissos = cpCompromissosMensais($pdo, $usuarioId);
 
+cpPerfEtapa('mei_projecao_caixa');
 $previsaoCaixa = cp14ProjecaoCaixaDetalhada($pdo, $usuarioId, 30);
 
+cpPerfEtapa('mei_grafico_mensal');
 $mensal = cpDadosMensais($pdo, $usuarioId, 12);
+cpPerfEtapa('mei_grafico_diario');
 $diario = cpDadosDiariosMes($pdo, $usuarioId);
 
+cpPerfEtapa('mei_estoque');
 $stmt = $pdo->prepare(
     'SELECT
             nome,
@@ -87,6 +99,7 @@ $stmt->execute([
 
 $estoqueBaixo = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+cpPerfEtapa('mei_top_itens');
 $stmt = $pdo->prepare(
     'SELECT
             vi.nome_item,
@@ -117,6 +130,7 @@ $stmt->execute([
 
 $topItens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+cpPerfEtapa('mei_proximos_compromissos');
 $hoje = date('Y-m-d');
 $ate = date('Y-m-d', strtotime('+15 days'));
 
@@ -146,6 +160,7 @@ $stmt->execute([
 
 $proximosCompromissos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+cpPerfEtapa('mei_renderizar');
 $radar = [];
 
 $variacaoDespesas =

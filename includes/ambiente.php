@@ -13,6 +13,7 @@ function cashpilotVariaveisPermitidas(): array
 {
     return [
         'CASHPILOT_ENV',
+        'CASHPILOT_PERFORMANCE_LOG',
         'CASHPILOT_SECURITY_KEY',
         'CASHPILOT_PRIVACY_EMAIL',
         'CASHPILOT_IA_EXTERNAL_ENABLED',
@@ -148,3 +149,6 @@ function cashpilotCarregarSegredosExternos(): void
 
 cashpilotCarregarSegredosExternos();
 cashpilotCarregarArquivoAmbiente(dirname(__DIR__) . '/.env');
+
+require_once __DIR__ . '/desempenho.php';
+cpPerfIniciar();

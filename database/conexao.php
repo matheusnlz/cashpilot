@@ -34,12 +34,19 @@ function conectar(): PDO
             ';dbname=' . $nome .
             ';charset=utf8mb4';
 
-        $pdo = new PDO($dsn, $usuario, $senha, [
+        $opcoes = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_STRINGIFY_FETCHES => false
-        ]);
+        ];
+
+        if (cpPerfAtivo()) {
+            $opcoes[PDO::ATTR_STATEMENT_CLASS] = [CashPilotPerfStatement::class];
+            $pdo = cpPerfMedir('conexao', fn() => new CashPilotPerfPDO($dsn, $usuario, $senha, $opcoes));
+        } else {
+            $pdo = new PDO($dsn, $usuario, $senha, $opcoes);
+        }
 
         $pdo->exec("SET time_zone = '-03:00'");
 
